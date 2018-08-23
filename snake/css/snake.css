@@ -1,0 +1,283 @@
+@font-face{
+    font-family: 'Silkscreen';
+    src: url('../../fonts/slkscr-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body{
+    background-color: #2e2e2e;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    height: 100%
+}
+
+
+.backBlue{
+    transform: rotate(180deg);
+}
+
+.backGreen{
+    transform: rotate(270deg);
+}
+
+.backYellow{
+    transform: rotate(90deg);
+}
+
+.backframe{
+    width: 50%;
+    height: 160px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: black;
+}
+
+.balken{
+    position: fixed;
+        
+    font-family: 'Silkscreen';    
+    
+    text-align: center;
+    color: white;
+}
+
+.buttonNewGameHorizontal{
+    width: 150px;
+    height: 35px;
+    border: none;
+    
+    color: white;
+    background-color: dimgray;
+    
+    font-family: 'Silkscreen'; 
+}
+
+/* Betrifft nur Chrome/Chromium */
+.buttonNewGameHorizontal p{
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+}
+
+.buttonNewGameVertical{
+    width: 35px;
+    height: 150px;
+    border: none;
+    
+    color: white;
+    background-color: dimgray;
+    
+    font-family: 'Silkscreen';    
+}
+
+/* Betrifft nur Chrome/Chromium */
+.buttonNewGameVertical p{
+    -webkit-writing-mode: vertical-rl !important;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+}
+
+.buttonPause:focus{
+    color: #0080ff;
+}
+
+.charframe{
+    height: 130px;
+    width:100%;
+    color: white;
+    font-size: 130px;
+    text-align: center;
+    vertical-align: middle;
+    display: inherit;
+    font-family: 'Silkscreen';
+}
+
+.frontframe{
+    width: 20%;
+    height: 160px;
+    display: inline-block;
+}
+
+.highscore_gameover{
+    font-size: 150%;
+    color: lawngreen;
+}
+
+.highscore_name{
+    color: mediumslateblue;
+}
+
+.highscore_new{
+    color: darkorange;
+}
+
+.highscore_score{
+    color: deeppink;
+}
+
+.punkte1{
+    bottom: -100px;
+    left: 0px;
+    right: 0px;
+    height: 23px;
+    padding-top: 2px;
+    visibility: collapse;
+    
+    background-color: #ff0000;
+    z-index: 1;
+}
+
+.punkte2{
+    top: 0px;
+    left: -100px;
+    bottom: 0px;
+    width: 23px;
+    padding-right: 2px;
+    visibility: collapse;
+    writing-mode: vertical-rl;
+    
+    background-color: #ffe000;
+    z-index: 1;
+}
+
+.punkte3{
+    top: -100px;
+    left: 0px;
+    right: 0px;
+    height: 23px;
+    padding-top: 2px;
+    visibility: collapse;
+
+    transform: rotate(180deg);
+    
+    background-color: #0080ff;
+    z-index: 1;
+}
+
+.punkte4{
+    top: 0px;
+    right: -100px;
+    bottom: 0px;
+    width: 23px;
+    padding-right: 2px;
+    visibility: collapse;
+    
+    transform: rotate(180deg);
+    writing-mode: vertical-rl;
+    
+    background-color: #01df3a;
+    z-index: 1;
+}
+
+.redSnakeVisible{
+    bottom: 25px !important;
+    padding-bottom: 25px;
+    transition-delay: 0.28s;
+}
+
+.rules1{
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    padding-bottom: 27px;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.rules2{
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    height: 300px;
+    padding-left: 27px;
+    margin-top: auto;
+    margin-bottom: auto;
+    writing-mode: vertical-rl;
+    -webkit-margin-after: -25px; /*das padding-left funktioniert in Chromium nicht */
+
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.rules3{
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    width: 300px;
+    padding-bottom: 27px;
+    margin-left: auto;
+    margin-right: auto;
+    
+    transform: rotate(180deg);
+
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.rules4{
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    height: 300px;
+    padding-left: 27px;
+    margin-top: auto;
+    margin-bottom: auto;
+    -webkit-margin-before: 27px; /*das padding-left funktioniert in Chromium nicht */
+    
+    transform: rotate(180deg);
+    writing-mode: vertical-rl;
+    
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.slidefrombottom{
+    visibility: visible !important;
+    transition: 1s;
+    transition-delay: 0s;
+    bottom: 0 !important;
+}
+
+.slidefromleft{
+    visibility: visible !important;
+    transition: 1s;
+    left: 0 !important;
+}
+
+.slidefromright{
+    visibility: visible !important;
+    transition: 1s;
+    right: 0 !important;
+}
+
+.slidefromtop{
+    visibility: visible !important;
+    transition: 1s;
+    top: 0 !important;
+}
+
+.spielfeldwrapper{
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    bottom: 25px;
+    left: 25px;   
+
+    background-image: url("../../pictures/wallpaper.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.underline{
+    height: 10px;
+    width: 90%;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+}

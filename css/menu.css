@@ -1,0 +1,60 @@
+@font-face{
+    font-family: 'Silkscreen-Bold';
+    src: url('../fonts/slkscrb-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@keyframes rainbow{
+	12.5%{color: red;}
+    25%{color: orange;}
+	37.5%{color: yellow;}
+	50%{color: 04B404;}
+    62.5%{color: lightskyblue;}
+    75%{color: indigo;}
+	87.5%{color: purple;}
+    100%{color: violet;}		
+}
+
+.spieltisch{
+    background-color: black;
+    padding: 0 0 15% 0;
+}
+
+.spieltisch .title{
+    animation: rainbow 1s infinite;
+    margin-top: 50px;
+    text-align: center;
+    font-size: 80px;
+    font-family: 'Silkscreen-Bold';
+}
+
+.spieltisch button{
+    margin-left: auto;
+    margin-right: auto;
+    background-color: Transparent;
+    border: none;
+    flex: 1 1 auto;
+}
+
+.spieltisch button:focus,
+.spieltisch button:hover{
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.spieltisch button > span.kijs-caption{
+    font-size: 60px !important;
+    font-family: 'Silkscreen-Bold' !important;
+    color: #fff;
+}
+
+.spieltisch button:focus span::before{
+    content: "►";
+}
+
+.spieltisch button:nth-child(4n+0):focus span{ color: yellow; }
+.spieltisch button:nth-child(4n+1):focus span{ color: blue; }
+.spieltisch button:nth-child(4n+2):focus span{ color: red; }
+.spieltisch button:nth-child(4n+3):focus span{ color: #04B404; }
