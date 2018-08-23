@@ -5,3 +5,5 @@
 -- Made for a gaming table
 
 This Applikation needs the KIJS-Framework to run!
+
+Send me a mail for further information :-)
