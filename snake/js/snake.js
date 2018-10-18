@@ -1,3 +1,5 @@
+/* global kijs, snake */
+
 // --------------------------------------------------------------
 // snake.Spielfeld
 // --------------------------------------------------------------
@@ -24,7 +26,7 @@ kijs.Class.define('snake.Snake', {
         this.directionChanges = [];
         this.directions = [this.direction];
 
-        for (var i=0; i<this.snakeElementCount; i++) {
+        for (var i = 0; i < this.snakeElementCount; i++) {
             this.snakeElements.push({x:this.initX, y:this.initY, testCollision:false});
         }
 
@@ -102,7 +104,7 @@ kijs.Class.define('snake.Snake', {
 
             this.directions.push(lastElementDirection);
             
-            for (i=0; i<this.directionChanges.length; i++) {
+            for (i = 0; i < this.directionChanges.length; i++) {
                 this.directionChanges[i].count++;
             }
             // Abstand zum nächsten Element festlegen
@@ -149,9 +151,9 @@ kijs.Class.define('snake.Snake', {
             this.directions[0] = this.direction;
 
             // Snake aussen zeichnen
-            for (i=0; i<this.snakeElementCount; i++) {
+            for (i = 0; i < this.snakeElementCount; i++) {
                 if (this.directionChanges.length > 0 && i>0) {
-                    for (j=0; j<this.directionChanges.length; j++) {
+                    for (j = 0; j < this.directionChanges.length; j++) {
                         if (this.snakeElements[i].x === this.directionChanges[j].x &&
                                 this.snakeElements[i].y === this.directionChanges[j].y) {
                             this.directions[i] = this.directionChanges[j].direction;
@@ -184,7 +186,7 @@ kijs.Class.define('snake.Snake', {
             }
 
             // Snake innen zeichnen
-            for (i=this.snakeElementCount-1; i>=0; i--) {
+            for (i = this.snakeElementCount-1; i >= 0; i--) {
                 width = this.snakeElementWidth - this.border;
                 if (width < 1) {
                     width = 1;
@@ -243,7 +245,7 @@ kijs.Class.define('snake.Snake', {
             }, this);
 
             // Hindernis
-            for (i=0; i<8; i++) {
+            for (i = 0; i < 8; i++) {
                 if ((this.snakeElements[0].x<=this.spielfeld.obstacles[i].x+this.spielfeld.obstacles[i].width && this.snakeElements[0].x+this.snakeElementWidth>=this.spielfeld.obstacles[i].x) &&
                         (this.snakeElements[0].y<=this.spielfeld.obstacles[i].y+this.spielfeld.obstacles[i].height && this.snakeElements[0].y+this.snakeElementHeight>=this.spielfeld.obstacles[i].y)) {
                     this.gameOver();
@@ -253,7 +255,7 @@ kijs.Class.define('snake.Snake', {
 
             // Frucht neu platzieren wenn auf Hindernis
             kijs.Array.each(this.spielfeld.fruits, function(fruit) {
-                for (i=0; i<8; i++) {
+                for (i = 0; i < 8; i++) {
                     if ((fruit.x<=this.spielfeld.obstacles[i].x+this.spielfeld.obstacles[i].width && fruit.x+fruit.width>=this.spielfeld.obstacles[i].x) &&
                             (fruit.y<=this.spielfeld.obstacles[i].y+this.spielfeld.obstacles[i].height && fruit.y+fruit.height>=this.spielfeld.obstacles[i].y)) {
                         fruit.replace();
@@ -264,7 +266,7 @@ kijs.Class.define('snake.Snake', {
             
             // Hindernis neu platzieren wenn auf anderem Hindernis
             kijs.Array.each(this.spielfeld.obstacles, function(obstacle) {
-                for (i=0; i<8; i++) {
+                for (i = 0; i < 8; i++) {
                     if (obstacle !== this.spielfeld.obstacles[i]) {
                         if ((obstacle.x<=this.spielfeld.obstacles[i].x+this.spielfeld.obstacles[i].width && obstacle.x+obstacle.width>=this.spielfeld.obstacles[i].x) &&
                                 (obstacle.y<=this.spielfeld.obstacles[i].y+this.spielfeld.obstacles[i].height && obstacle.y+obstacle.height>=this.spielfeld.obstacles[i].y)) {
@@ -277,7 +279,7 @@ kijs.Class.define('snake.Snake', {
 
             // Kollision mit sich selber
             if (this.snakeElementCount > 1) {
-                for (i=1; i<this.snakeElementCount; i++) {
+                for (i = 1; i < this.snakeElementCount; i++) {
                     if (this.snakeElements[i].testCollision && (this.snakeElements[0].x<=this.snakeElements[i].x+this.snakeElementWidth && this.snakeElements[0].x+this.snakeElementWidth>=this.snakeElements[i].x &&
                             this.snakeElements[0].y<=this.snakeElements[i].y+this.snakeElementHeight && this.snakeElements[0].y+this.snakeElementHeight>=this.snakeElements[i].y)) {
                         this.gameOver();
@@ -289,7 +291,7 @@ kijs.Class.define('snake.Snake', {
             // Kollision mit anderen Schlangen
             kijs.Array.each(this.spielfeld.snakes, function(snake) {
                 if (snake !== this.snake && !snake.isGameOver && this.spielfeld.snakes.length > 1) {
-                    for (i=1; i<snake.snakeElementCount; i++) {
+                    for (i = 1; i < snake.snakeElementCount; i++) {
                         if (snake.snakeElements[i].testCollision && (this.snakeElements[0].x<snake.snakeElements[i].x+snake.snakeElementWidth && this.snakeElements[0].x+snake.snakeElementWidth>snake.snakeElements[i].x) &&
                                 (this.snakeElements[0].y<snake.snakeElements[i].y+snake.snakeElementHeight && this.snakeElements[0].y+snake.snakeElementHeight>snake.snakeElements[i].y)) {
                             this.gameOver();
@@ -303,7 +305,7 @@ kijs.Class.define('snake.Snake', {
         _onSpielfeldKeyDown: function(e) {
             this.currentTime = (new Date()).getTime();
             
-            if (this.currentTime - this.lastTime > 50) {
+            if (this.currentTime - this.lastTime > 15) {
                 if (!e.repeat && this.spielfeld.isRunning) {
                     // gedrückte Taste ermitteln
                     if (e.key === this.controlKeys.L && this.direction !== 'R') {
