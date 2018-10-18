@@ -1,3 +1,5 @@
+/* global snake, kijs */
+
 // --------------------------------------------------------------
 // snake.Spielfeld
 // --------------------------------------------------------------
@@ -57,7 +59,7 @@ kijs.Class.define('snake.Spielfeld', {
             this.spielfeldwrapper.appendChild(this.spielfeld);
             
             // Anweisungen und Scorebalken erstellen
-            for (i=0; i<4; i ++) {
+            for (i = 0; i < 4; i++) {
                 var el = document.createElement('section');
                 var ru = document.createElement('div');
                 ru.innerHTML = 'Bewege den Joystick nach rechts um mitzuspielen<br /><br />Druecke den Startknopf um das Spiel zu starten';
@@ -245,7 +247,7 @@ kijs.Class.define('snake.Spielfeld', {
 						break;
 					case 13:
                         if (this.snakeOne || this.snakeTwo || this.snakeThree || this.snakeFour) {
-                            for (i=0; i<this.rules.length; i++) {
+                            for (i = 0; i < this.rules.length; i++) {
                                 document.body.removeChild(this.rules[i]);
                             }
                             window.removeEventListener('keydown', this.eventhandler);
@@ -260,7 +262,7 @@ kijs.Class.define('snake.Spielfeld', {
         },
         
         updateScores: function() {
-            for (i=0; i<this.snakes.length; i++) {
+            for (i = 0; i < this.snakes.length; i++) {
                 var html = '';
                 html += '<span>Score: ' + this.snakes[i].score + ' Punkte</span>';
                 this.balken[this.snakes[i].no].innerHTML = html;
