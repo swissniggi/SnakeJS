@@ -50,7 +50,7 @@ kijs.Class.define('spieltisch.Menu', {
             });
             
             // Buttons generieren
-            for (var i=0; i<this.buttons.length; i++) {
+            for (var i = 0; i < this.buttons.length; i++) {
                 this.buttons[i].el = new kijs.gui.Button({
                     xtype: 'kijs.gui.Button',
                     caption: this.buttons[i].caption,
