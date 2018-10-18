@@ -1,3 +1,5 @@
+/* global kijs */
+
 // --------------------------------------------------------------
 // snake.Highscore
 // --------------------------------------------------------------
@@ -82,15 +84,30 @@ kijs.Class.define('snake.Highscore', {
             // Array füllen (Alphabet, 0-9 + ' ')
             this.fillAlphabet();
             this.chars.push(1,2,3,4,5,6,7,8,9,0,' ');
-            document.body.addEventListener('keydown', kijs.createDelegate(this.inputChar, this))
+            document.body.addEventListener('keydown', kijs.createDelegate(this.inputChar, this));
         },
         
         // Belegung ändern, damit anschliessend die korrekten Funktionen ausgeführt werden
         changeKeys: function(char) {
             switch(char) {
-                case 'y': [this.keys.L, this.keys.D] = [this.keys.D, this.keys.L]; [this.keys.R, this.keys.U] = [this.keys.U, this.keys.R]; break;
-                case 'b': [this.keys.U, this.keys.D] = [this.keys.D, this.keys.U]; [this.keys.R, this.keys.L] = [this.keys.L, this.keys.R]; break;
-                case 'g': [this.keys.L, this.keys.U] = [this.keys.U, this.keys.L]; [this.keys.R, this.keys.D] = [this.keys.D, this.keys.R]; break;
+                case 'y': 
+                    this.keys.D = 's';
+                    this.keys.U = 'w';
+                    this.keys.R = 'd';
+                    this.keys.L = 'a';
+                    break;
+                case 'b': 
+                    this.keys.D = '2';
+                    this.keys.U = '8';
+                    this.keys.R = '6';
+                    this.keys.L = '4';
+                    break;
+                case 'g': 
+                    this.keys.D = 'k';
+                    this.keys.U = 'i';
+                    this.keys.R = 'l';
+                    this.keys.L = 'j';
+                    break;
             }
         },
         
@@ -111,7 +128,7 @@ kijs.Class.define('snake.Highscore', {
         // Array mit allen Buchstaben des Alphabets füllen
         fillAlphabet: function() {
             var i = 65, j = 90;
-            for (; i<=j; ++i) {
+            for (i; i <= j; ++i) {
                 this.chars.push(String.fromCharCode(i));
             }
         },
@@ -168,7 +185,7 @@ kijs.Class.define('snake.Highscore', {
         },
 
         saveScore: function() {
-            for (i=0; i<5; i++) {
+            for (i = 0; i < 5; i++) {
                 this.name += this.frames[i].charframe.innerHTML;
             }
             var config = {
