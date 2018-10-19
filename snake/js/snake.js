@@ -305,19 +305,19 @@ kijs.Class.define('snake.Snake', {
         _onSpielfeldKeyDown: function(e) {
             this.currentTime = (new Date()).getTime();
             
-            if (this.currentTime - this.lastTime > 15) {
+	    if (this.currentTime - this.lastTime > 15) {
                 if (!e.repeat && this.spielfeld.isRunning) {
                     // gedrückte Taste ermitteln
-                    if (e.key === this.controlKeys.L && this.direction !== 'R') {
+                    if (e.key === this.controlKeys.L && ['R', 'L'].indexOf(this.direction) === -1) {
                         this.direction = 'L';
                         this.directionChanges.unshift({x:this.snakeElements[0].x, y:this.snakeElements[0].y, direction:this.direction, count:this.snakeElementCount-1});
-                    } else if (e.key === this.controlKeys.R && this.direction !== 'L') {
+                    } else if (e.key === this.controlKeys.R && ['R', 'L'].indexOf(this.direction) === -1) {
                         this.direction = 'R';
                         this.directionChanges.unshift({x:this.snakeElements[0].x, y:this.snakeElements[0].y, direction:this.direction, count:this.snakeElementCount-1});
-                    } else if (e.key === this.controlKeys.U && this.direction !== 'D') {
+                    } else if (e.key === this.controlKeys.U && ['U', 'D'].indexOf(this.direction) === -1) {
                         this.direction = 'U';
                         this.directionChanges.unshift({x:this.snakeElements[0].x, y:this.snakeElements[0].y, direction:this.direction, count:this.snakeElementCount-1});
-                    } else if (e.key === this.controlKeys.D && this.direction !== 'U') {
+                    } else if (e.key === this.controlKeys.D && ['U', 'D'].indexOf(this.direction) === -1) {
                         this.direction = 'D';
                         this.directionChanges.unshift({x:this.snakeElements[0].x, y:this.snakeElements[0].y, direction:this.direction, count:this.snakeElementCount-1});
                     } else if (e.key === 'Pause') {
@@ -328,8 +328,8 @@ kijs.Class.define('snake.Snake', {
                 }
             }
             this.lastTime = this.currentTime;
-		}
-	},
+        }
+    },
 
     // --------------------------------------------------------------
     // DESTRUCTOR
