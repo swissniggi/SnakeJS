@@ -6,4 +6,4 @@
 
 __Important:__ Don't change highscore_snake.txt! Make sure the application process has rights to write this file!
 
-This Applikation needs the old KIJS-Framework to run! // Send me a mail for further information :-)
+This Applikation requires the old KIJS-Framework to run! // Send me a mail for further information :-)
