@@ -26,7 +26,7 @@ kijs.Class.define('snake.Spielfeld', {
     members: {
         balken: null,
         dom: null,
-        eventhandler: null,        
+        eventhandler: null,
         fruits: null,
         fruitsCount: 20,
         height: null,
@@ -41,15 +41,15 @@ kijs.Class.define('snake.Spielfeld', {
         snakeOne: false,
         snakeTwo: false,
         snakeThree: false,
-        snakeFour: false,       
+        snakeFour: false,
         spielfeld: null,
         spielfeldwrapper: null,
         width: null,
-        _loopHandle: null,       
+        _loopHandle: null,
 
 
         // PUBLIC
-        init: function() {            
+        init: function() {
             // Spielfeldwrapper und Spielfeld erstellen
             this.spielfeldwrapper = document.createElement('div');
             this.spielfeldwrapper.classList.add('spielfeldwrapper');
@@ -181,13 +181,13 @@ kijs.Class.define('snake.Spielfeld', {
             }
 
             // Fruits erstellen
-            for (i=0; i<this.fruitsCount; i++) {
+            for (i = 0; i < this.fruitsCount; i++) {
                 var fruit = new snake.Fruit(this);
                 this.fruits.push(fruit);
             }
             
             // Hindernisse erstellen
-            for (i=0; i<8; i++) {
+            for (i = 0; i < 8; i++) {
                 var obstacle = new snake.Obstacle(this);
                 this.obstacles.push(obstacle);
             }
@@ -200,7 +200,7 @@ kijs.Class.define('snake.Spielfeld', {
             // Musik starten
             this.snakemusic = new Audio('../sounds/snakemusic.mp3');
             this.snakemusic.addEventListener('ended', kijs.createDelegate(this.playAudio, this));
-            this.snakemusic.play();            
+            this.snakemusic.play();
             this.isRunning = true;
         },
         
@@ -267,7 +267,7 @@ kijs.Class.define('snake.Spielfeld', {
                 html += '<span>Score: ' + this.snakes[i].score + ' Punkte</span>';
                 this.balken[this.snakes[i].no].innerHTML = html;
             }
-        }       
+        }
     },
 
     // --------------------------------------------------------------
