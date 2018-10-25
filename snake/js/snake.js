@@ -29,8 +29,20 @@ kijs.Class.define('snake.Snake', {
         for (var i = 0; i < this.snakeElementCount; i++) {
             this.snakeElements.push({x:this.initX, y:this.initY, testCollision:false});
         }
+        
+        var color = '';
+        
+        switch(this.no) {
+            case 0: color = 'Red'; break;
+            case 1: color = 'Yellow'; break;
+            case 2: color = 'Blue'; break;
+            case 3: color = 'Green'; break;
+        }
 
-        this.spielfeld.on('keydown', this._onSpielfeldKeyDown, this);
+        var el = new snake.EventListener();
+        this.spielfeld.on('keydown', el._onSnakeKeyDown, el);
+        window.addEventListener('stick'+color, this._onStickEvent.bind(this), true);
+        
         this.calculateColor();
     },
 
@@ -60,7 +72,7 @@ kijs.Class.define('snake.Snake', {
         speed: 2,
         spielfeld: null,
         x: null,
-        y: null,    
+        y: null,
 
 
         // PUBLIC
@@ -132,7 +144,7 @@ kijs.Class.define('snake.Snake', {
             
             // Snake-Elemente mit Kollisionserkennung ermitteln
             if (this.snakeElementCount > 1) {
-                for (i=1; i<this.snakeElementCount; i++) {
+                for (i = 1; i < this.snakeElementCount; i++) {
                     if (i <= 6) {
                         this.snakeElements[i].testCollision = false;
                     } else {
@@ -152,7 +164,7 @@ kijs.Class.define('snake.Snake', {
 
             // Snake aussen zeichnen
             for (i = 0; i < this.snakeElementCount; i++) {
-                if (this.directionChanges.length > 0 && i>0) {
+                if (this.directionChanges.length > 0 && i > 0) {
                     for (j = 0; j < this.directionChanges.length; j++) {
                         if (this.snakeElements[i].x === this.directionChanges[j].x &&
                                 this.snakeElements[i].y === this.directionChanges[j].y) {
@@ -175,7 +187,7 @@ kijs.Class.define('snake.Snake', {
                               break;
                     case 'D': this.snakeElements[i].y += this.speed;
                               break;
-                }              
+                }
 
                 this.context.fillStyle = 'black';
                 this.context.beginPath();
@@ -302,25 +314,25 @@ kijs.Class.define('snake.Snake', {
             }, this);
         },
 
-        _onSpielfeldKeyDown: function(e) {
+        _onStickEvent: function(e) {
             this.currentTime = (new Date()).getTime();
-            
-	    if (this.currentTime - this.lastTime > 15) {
-                if (!e.repeat && this.spielfeld.isRunning) {
+
+            if (this.currentTime - this.lastTime > 25) {
+                if (this.spielfeld.isRunning) {
                     // gedrückte Taste ermitteln
-                    if (e.key === this.controlKeys.L && ['R', 'L'].indexOf(this.direction) === -1) {
+                    if (e.detail === 'L' && ['R', 'L'].indexOf(this.direction) === -1) {
                         this.direction = 'L';
                         this.directionChanges.unshift({x:this.snakeElements[0].x, y:this.snakeElements[0].y, direction:this.direction, count:this.snakeElementCount-1});
-                    } else if (e.key === this.controlKeys.R && ['R', 'L'].indexOf(this.direction) === -1) {
+                    } else if (e.detail === 'R' && ['R', 'L'].indexOf(this.direction) === -1) {
                         this.direction = 'R';
                         this.directionChanges.unshift({x:this.snakeElements[0].x, y:this.snakeElements[0].y, direction:this.direction, count:this.snakeElementCount-1});
-                    } else if (e.key === this.controlKeys.U && ['U', 'D'].indexOf(this.direction) === -1) {
+                    } else if (e.detail === 'U' && ['U', 'D'].indexOf(this.direction) === -1) {
                         this.direction = 'U';
                         this.directionChanges.unshift({x:this.snakeElements[0].x, y:this.snakeElements[0].y, direction:this.direction, count:this.snakeElementCount-1});
-                    } else if (e.key === this.controlKeys.D && ['U', 'D'].indexOf(this.direction) === -1) {
+                    } else if (e.detail === 'D' && ['U', 'D'].indexOf(this.direction) === -1) {
                         this.direction = 'D';
                         this.directionChanges.unshift({x:this.snakeElements[0].x, y:this.snakeElements[0].y, direction:this.direction, count:this.snakeElementCount-1});
-                    } else if (e.key === 'Pause') {
+                    } else if (e.detail === 'Pause') {
                         // Spiel pausieren
                         var gameOver = new snake.GameOver(this.spielfeld, this.spielfeld.snakes, null, null, null);
                         gameOver.showPause();
@@ -328,8 +340,8 @@ kijs.Class.define('snake.Snake', {
                 }
             }
             this.lastTime = this.currentTime;
-        }
-    },
+		}
+	},
 
     // --------------------------------------------------------------
     // DESTRUCTOR
