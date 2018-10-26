@@ -168,16 +168,16 @@ kijs.Class.define('snake.Spielfeld', {
 
             // Snakes erstellen
              if (this.snakeOne) {
-                this.snakes.push(new snake.Snake(this, 0, this.width/2, this.height-35, 'U', '#FF0000', {R:'ArrowRight', L:'ArrowLeft', D:'ArrowDown', U:'ArrowUp'}));
+                this.snakes.push(new snake.Snake(this, 0, this.width/2-17, this.height-35, 'U', '#FF0000', {R:'ArrowRight', L:'ArrowLeft', D:'ArrowDown', U:'ArrowUp'}));
             }
             if (this.snakeTwo) {
-                this.snakes.push(new snake.Snake(this, 1, 35, this.height/2, 'R', '#FFE000', {D:'d', U:'a', L:'s', R:'w'}));
+                this.snakes.push(new snake.Snake(this, 1, 35, this.height/2-17, 'R', '#FFE000', {D:'d', U:'a', L:'s', R:'w'}));
             }
             if (this.snakeThree) {
-                this.snakes.push(new snake.Snake(this, 2, this.width/2, 35, 'D', '#0080FF', {L:'6', R:'4', U:'2', D:'8'}));
+                this.snakes.push(new snake.Snake(this, 2, this.width/2-17, 35, 'D', '#0080FF', {L:'6', R:'4', U:'2', D:'8'}));
             }
             if (this.snakeFour) {
-                this.snakes.push(new snake.Snake(this, 3, this.width-35, this.height/2, 'L', '#01DF3A', {U:'l', D:'j', R:'k', L:'i'}));
+                this.snakes.push(new snake.Snake(this, 3, this.width-35, this.height/2-17, 'L', '#01DF3A', {U:'l', D:'j', R:'k', L:'i'}));
             }
 
             // Fruits erstellen
