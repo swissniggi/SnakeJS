@@ -36,12 +36,23 @@ kijs.Class.define('snake.Obstacle', {
         // PUBLIC
         paint: function() {
             // Hindernis zeichnen
-            this.context.drawImage(this.image, this.x, this.y, this.width, this.height);
+            this.context.drawImage(this.image, this.x, this.y, this.width, this.height);            
         },
         
-        setCoordinates: function() {            
-            this.x = Math.floor(Math.random() * ((this.spielfeld.width - (this.width + 100)) - 150)) + 150;
-            this.y = Math.floor(Math.random() * ((this.spielfeld.height - (this.height + 100)) - 150)) + 150;
+        setCoordinates: function() {
+            this.x = 0;
+            // x-Koordinate: min 50 vom Rand und von der Mitte entfernt
+            while (this.x < 50 || this.x > this.spielfeld.width - (this.width+50)) {
+                this.x = Math.floor(Math.random() * (this.spielfeld.width / 2 - (this.width+50))
+                    + ((Math.floor(Math.random() * 2) === 0) ? this.spielfeld.width/2 + 50 : 0));
+            }
+            
+            this.y = 0;
+            // y-Koordinate: min. 50 vom Rand und von der Mitte entfernt
+            while (this.y < 50 || this.y > this.spielfeld.height - (this.height+50)) {
+                this.y = Math.floor(Math.random() * (this.spielfeld.height / 2 - (this.height+50))
+                    + ((Math.floor(Math.random() * 2) === 0) ? this.spielfeld.height/2 + 50 : 0));
+            }
         },
 
         setImage: function() {
@@ -57,7 +68,7 @@ kijs.Class.define('snake.Obstacle', {
                 this.width = 30;
                 this.height = 225;
             }
-            this.image = img;            
+            this.image = img;
         }
     },
 
