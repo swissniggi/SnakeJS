@@ -69,7 +69,7 @@ kijs.Class.define('snake.Snake', {
         snakeElementCount: 1,
         snakeElementHeight: 35,
         snakeElementWidth: 35,
-        speed: 2,
+        speed: 4,
         spielfeld: null,
         x: null,
         y: null,
