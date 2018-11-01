@@ -1,7 +1,7 @@
 /* global kijs, snake */
 
 // --------------------------------------------------------------
-// snake.Spielfeld
+// snake.Snake
 // --------------------------------------------------------------
 kijs.Class.define('snake.Snake', {
     type: 'regular',     // regular, abstract, static oder singleton (default:regular)
@@ -98,7 +98,7 @@ kijs.Class.define('snake.Snake', {
             this.isGameOver = true;
             var allGameOver = true;
             kijs.Array.each(this.spielfeld.snakes, function(snake) {
-                if (!snake.isGameOver) {
+                if (snake.basename === 'Snake' && !snake.isGameOver) {
                     allGameOver = false;
                     return false;
                 }
@@ -109,30 +109,33 @@ kijs.Class.define('snake.Snake', {
             }
         },
 
-        grow: function() {
-            var lastElementX = this.snakeElements[this.snakeElementCount-1].x;
-            var lastElementY = this.snakeElements[this.snakeElementCount-1].y;
-            var lastElementDirection = this.directions[this.directions.length-1];
+        grow: function(count) {
+            while (count > 0) {
+                var lastElementX = this.snakeElements[this.snakeElementCount-1].x;
+                var lastElementY = this.snakeElements[this.snakeElementCount-1].y;
+                var lastElementDirection = this.directions[this.directions.length-1];
 
-            this.directions.push(lastElementDirection);
-            
-            for (i = 0; i < this.directionChanges.length; i++) {
-                this.directionChanges[i].count++;
+                this.directions.push(lastElementDirection);
+
+                for (i = 0; i < this.directionChanges.length; i++) {
+                    this.directionChanges[i].count++;
+                }
+                // Abstand zum nächsten Element festlegen
+                // ACHTUNG! Abstand muss durch 'speed' teilbar sein!
+                switch (lastElementDirection) {
+                    case 'R': lastElementX -= 12;
+                              break;
+                    case 'L': lastElementX += 12;
+                              break;
+                    case 'U': lastElementY += 12;
+                              break;
+                    case 'D': lastElementY -= 12;
+                              break;
+                }
+                this.snakeElements.push({x:lastElementX, y:lastElementY, testCollision:false});
+                this.snakeElementCount++;
+                count--;
             }
-            // Abstand zum nächsten Element festlegen
-            // ACHTUNG! Abstand muss durch 'speed' teilbar sein!
-            switch (lastElementDirection) {
-                case 'R': lastElementX -= 12;
-                          break;
-                case 'L': lastElementX += 12;
-                          break;
-                case 'U': lastElementY += 12;
-                          break;
-                case 'D': lastElementY -= 12;
-                          break;
-            }
-            this.snakeElements.push({x:lastElementX, y:lastElementY, testCollision:false});
-            this.snakeElementCount++;
         },
 
         paint: function() {
@@ -157,8 +160,7 @@ kijs.Class.define('snake.Snake', {
             if (this.snakeElements[0].x === null) {
                 this.snakeElements[0] = {x:this.x, y:this.y, testCollision:false};
                 // this.grow() zwei Mal ausführen für Initiallänge(3)
-                this.grow();
-                this.grow();
+                this.grow(2);
             }
             this.directions[0] = this.direction;
 
@@ -251,7 +253,7 @@ kijs.Class.define('snake.Snake', {
                     fruit.replace();
                     this.score++;
                     this.spielfeld.updateScores();
-                    this.grow();
+                    this.grow(3);
                     return false;
                 }
             }, this);
@@ -311,7 +313,7 @@ kijs.Class.define('snake.Snake', {
                         }
                     }
                 }
-            }, this);
+            }, this);           
         },
 
         _onStickEvent: function(e) {
