@@ -47,7 +47,7 @@ kijs.Class.define('snake.MagicSnake', {
         lastTime: null,
         newColor: null,
         no: null,
-        onBorder: null,
+        onBorder: false,
         snakeElements: null,
         snakeElementCount: 1,
         snakeElementHeight: 35,
@@ -85,16 +85,16 @@ kijs.Class.define('snake.MagicSnake', {
         checkPosition: function() {
             if (this.direction === 'R' && this.spielfeld.width - this.snakeElements[0].x < 100) {
                 this.changeDirection('U');
-                this.onBorder = 'R';
+                this.onBorder = true;
             } else if (this.direction === 'U' && this.snakeElements[0].y < 65) {
                 this.changeDirection('L');
-                this.onBorder = 'U';
+                this.onBorder = true;
             } else if (this.direction === 'L' && this.snakeElements[0].x < 65) {
                 this.changeDirection('D');
-                this.onBorder = 'L';
+                this.onBorder = true;
             } else if (this.direction === 'D' && this.spielfeld.height - this.snakeElements[0].y < 100) {
                 this.changeDirection('R');
-                this.onBorder = 'D';
+                this.onBorder = true;
             }
         },
 
@@ -294,7 +294,7 @@ kijs.Class.define('snake.MagicSnake', {
             var now = (new Date()).getTime();
             
             if (now % 7 === 0 && now - this.lastTime > 2000) {
-                if (Math.round(Math.random()) === 0) {
+                if (Math.round(Math.random()) === 0 || this.onBorder) {
                     if (this.direction === 'R') {
                         this.changeDirection('U');
                     } else if (this.direction === 'L') {
@@ -305,17 +305,17 @@ kijs.Class.define('snake.MagicSnake', {
                         this.changeDirection('R');
                     }
                 } else {
-                    if (this.direction === 'R' && this.onBorder !== 'D') {
+                    if (this.direction === 'R') {
                         this.changeDirection('D');
-                    } else if (this.direction === 'L' && this.onBorder !== 'U') {
+                    } else if (this.direction === 'L') {
                         this.changeDirection('U');
-                    } else if (this.direction === 'U' && this.onBorder !== 'R') {
+                    } else if (this.direction === 'U') {
                         this.changeDirection('R');
-                    } else if (this.direction === 'D' && this.onBorder !== 'L') {
+                    } else if (this.direction === 'D') {
                         this.changeDirection('L');
                     }
                 }
-                this.onBorder = null;
+                this.onBorder = false;
                 this.lastTime = now;
             }
         }
