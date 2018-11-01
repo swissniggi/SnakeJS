@@ -30,7 +30,7 @@ kijs.Class.define('snake.GameOver', {
         highScore: null,
         maxScore: null,
         msg: null,
-        snakes: null,      
+        snakes: null,
 
 
         // PUBLIC 
@@ -38,10 +38,10 @@ kijs.Class.define('snake.GameOver', {
             document.location.reload();
         },
         
-        playGameOverSound: function(isNewScore) {           
+        playGameOverSound: function(isNewScore) {
             if (!isNewScore) {
                 var oops = new Audio('../sounds/gameover.mp3');
-                oops.play();               
+                oops.play();
             } else {
                 var applaus = new Audio('../sounds/applaus.mp3');
                 applaus.play();
@@ -55,26 +55,26 @@ kijs.Class.define('snake.GameOver', {
             // Game-Over-Nachricht definieren
             if (this.maxScore <= this.highScore[0] && this.highScore[1] !== '' || this.maxScore === 0) {
                 this.msg = '<p class="highscore_gameover">Game Over!</p>' + this.msg
-                         + '<p>Wochen-Highscore: <span class="highscore_score">' + this.highScore[0] 
-                         + ' Punkte</span><br /> aufgestellt von: <span class="highscore_name">' 
+                         + '<p>Wochen-Highscore: <span class="highscore_score">' + this.highScore[0]
+                         + ' Punkte</span><br /> aufgestellt von: <span class="highscore_name">'
                          + this.highScore[1] + '</span><br />am: ' + this.highScore[2]
-                         + '</p><p>Monats-Highscore: <span class="highscore_score">' + this.highScore[3] 
-                         + ' Punkte</span><br /> aufgestellt von: <span class="highscore_name">' 
+                         + '</p><p>Monats-Highscore: <span class="highscore_score">' + this.highScore[3]
+                         + ' Punkte</span><br /> aufgestellt von: <span class="highscore_name">'
                          + this.highScore [4] + '</span><br />am: ' + this.highScore[5]
-                         + '</p><p>Jahres-Highscore: <span class="highscore_score">' + this.highScore[6] 
-                         + ' Punkte</span><br /> aufgestellt von: <span class="highscore_name">' 
+                         + '</p><p>Jahres-Highscore: <span class="highscore_score">' + this.highScore[6]
+                         + ' Punkte</span><br /> aufgestellt von: <span class="highscore_name">'
                          + this.highScore[7] + '</span><br />am: ' + this.highScore[8] + '</p>';
                 this.showGameOver(false);
             } else if (this.maxScore == this.highScore[0] && this.maxScore != this.highScore[3] && this.maxScore != this.highScore[6]) {
-                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg 
+                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
                          + '<p class="highscore_new"><u>Neuer Wochen-Highscore!</u></p>';
                 this.showGameOver(true);
             } else if (this.maxScore == this.highScore[0] && this.maxScore == this.highScore[3] && this.maxScore != this.highScore[6]) {
-                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg 
+                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
                          + '<p class="highscore_new"><u>Neuer Monats-Highscore!</u></p>';
                 this.showGameOver(true);
             } else if (this.maxScore == this.highScore[0] && this.maxScore == this.highScore[3] && this.maxScore == this.highScore[6]) {
-                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg 
+                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
                          + '<p class="highscore_new"><u>Neuer Jahres-Highscore!</u></p>';
                 this.showGameOver(true);
             }
@@ -102,8 +102,10 @@ kijs.Class.define('snake.GameOver', {
         showGameOver: function(isNewScore) {
             // 'Kärtchen' mit Game-Over-Nachricht erstellen
             for (i = 0; i < this.snakes.length; i++) {
-                this.spielfeld.rules[this.snakes[i].no].innerHTML = this.msg;
-                document.body.appendChild(this.spielfeld.rules[this.snakes[i].no]);
+                if (this.snakes[i].basename === 'Snake') {
+                    this.spielfeld.rules[this.snakes[i].no].innerHTML = this.msg;                
+                    document.body.appendChild(this.spielfeld.rules[this.snakes[i].no]);
+                }
             }
             // Button zum Starten eines neuen Spiels erstellen wenn kein neuer Highscore
             if (!isNewScore) {
