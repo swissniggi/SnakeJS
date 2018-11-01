@@ -32,6 +32,8 @@ kijs.Class.define('snake.Spielfeld', {
         height: null,
         highscore: null,
         isRunning: false,
+        magicMode: false,
+        magicSnake: null,
         maxScore: null,
         msg: null,
         obstacles: null,
@@ -62,7 +64,8 @@ kijs.Class.define('snake.Spielfeld', {
             for (i = 0; i < 4; i++) {
                 var el = document.createElement('section');
                 var ru = document.createElement('div');
-                ru.innerHTML = 'Bewege den Joystick nach rechts um mitzuspielen<br /><br />Druecke den Startknopf um das Spiel zu starten';
+                ru.innerHTML = 'Bewege den Joystick um mitzuspielen<br /><br />Druecke den roten Button fuer den Magic-Modus';
+                ru.innerHTML += '<br /><br />Druecke den Startknopf um das Spiel zu starten';
                 el.classList.add('balken','punkte'+(i+1));
                 ru.classList.add('balken','rules'+(i+1));
                 this.balken.push(el);
@@ -89,17 +92,19 @@ kijs.Class.define('snake.Spielfeld', {
             this.snakemusic = null;
             this.msg = '';
             var maxScore = 0;
-            var s_names = ['Rote', 'Gelbe', 'Blaue', 'Gruene'];
+            var s_names = ['Rote', 'Gelbe', 'Blaue', 'Gruene', 'Silberne', 'Goldene'];
 
             kijs.Array.each(this.snakes, function(snake) {
-                if (snake.score > maxScore) {
-                    maxScore = snake.score;
+                if (snake.basename === 'Snake') {
+                    if (snake.score > maxScore) {
+                        maxScore = snake.score;
+                    }
+                    this.msg += '<p><span style=\"color: ' + snake.borderColor + '\">' + s_names[snake.no] 
+                             + '</span> Schlange: <span class="highscore_score">' + snake.score + ' Punkte</span></p>';
                 }
-                this.msg += '<p><span style=\"color: ' + snake.borderColor + '\">' + s_names[snake.no] 
-                         + '</span> Schlange: <span class="highscore_score">' + snake.score + ' Punkte</span></p>';
             }, this);
 
-            if (this.snakes.length > 1) {
+            if (this.snakes.length > 1 && lastSnake.basename === 'Snake') {
                 this.msg += '<p>Die <span style="color: ' + lastSnake.borderColor + '">' + s_names[lastSnake.no] + '</span> Schlange hat am laengsten ueberlebt!</p>';
                 //-> das Font 'Silkscreen' hat keine Umlaute, d.h. ä = ae, ü = ue
             }
@@ -179,6 +184,10 @@ kijs.Class.define('snake.Spielfeld', {
             if (this.snakeFour) {
                 this.snakes.push(new snake.Snake(this, 3, this.width-35, this.height/2-17, 'L', '#01DF3A', {U:'l', D:'j', R:'k', L:'i'}));
             }
+            
+            if (this.magicMode) {
+                this.snakes.push(new snake.MagicSnake(this, this.width/3, this.height-35, 'U', '#C0C0C0'));
+            }
 
             // Fruits erstellen
             for (i = 0; i < this.fruitsCount; i++) {
@@ -207,7 +216,10 @@ kijs.Class.define('snake.Spielfeld', {
         setPlayers: function(e) {
 			if (!e.repeat) {
 				switch (e.keyCode) {
+                    case 37:
+                    case 38:
                     case 39:
+                    case 40:
                         if (!this.snakeOne) {
                             this.balken[0].classList.add('slidefrombottom');
                             this.balken[3].classList.add('redSnakeVisible');
@@ -218,7 +230,10 @@ kijs.Class.define('snake.Spielfeld', {
                             this.snakeOne = false;
                         }
                         break;
+                    case 65:
 					case 68:
+                    case 83:
+                    case 87:
 						if (!this.snakeTwo) {
 							this.balken[1].classList.add('slidefromleft');
 							this.snakeTwo = true;
@@ -227,7 +242,10 @@ kijs.Class.define('snake.Spielfeld', {
 							this.snakeTwo = false;
 						}
 						break;
+                    case 98:
+                    case 100:
 					case 102:
+                    case 104:
 						if (!this.snakeThree) {
 							this.balken[2].classList.add('slidefromtop');
 							this.snakeThree = true;
@@ -236,6 +254,9 @@ kijs.Class.define('snake.Spielfeld', {
 							this.snakeThree = false;
 						}
 						break;
+                    case 73:
+                    case 74:
+                    case 75:
 					case 76:
 						if (!this.snakeFour) {
 							this.balken[3].classList.add('slidefromright');
@@ -245,6 +266,9 @@ kijs.Class.define('snake.Spielfeld', {
 							this.snakeFour = false;
 						}
 						break;
+                    case 32:
+                        this.magicMode = true;
+                        break;
 					case 13:
                         if (this.snakeOne || this.snakeTwo || this.snakeThree || this.snakeFour) {
                             for (i = 0; i < this.rules.length; i++) {
@@ -263,9 +287,11 @@ kijs.Class.define('snake.Spielfeld', {
         
         updateScores: function() {
             for (i = 0; i < this.snakes.length; i++) {
-                var html = '';
-                html += '<span>Score: ' + this.snakes[i].score + ' Punkte</span>';
-                this.balken[this.snakes[i].no].innerHTML = html;
+                if (this.snakes[i].basename === 'Snake') {
+                    var html = '';                
+                    html += '<span>Score: ' + this.snakes[i].score + ' Punkte</span>';
+                    this.balken[this.snakes[i].no].innerHTML = html;
+                }
             }
         }
     },
