@@ -82,6 +82,52 @@ kijs.Class.define('snake.MagicSnake', {
             this.directionChanges.unshift({x:this.snakeElements[0].x, y:this.snakeElements[0].y, direction:this.direction, count:this.snakeElementCount-1});
         },
         
+        checkCollision: function() {
+            // Frucht
+            kijs.Array.each(this.spielfeld.fruits, function(fruit) {
+                if ((this.snakeElements[0].x<=fruit.x+fruit.width && this.snakeElements[0].x+this.snakeElementWidth>=fruit.x) &&
+                        (this.snakeElements[0].y<=fruit.y+fruit.height && this.snakeElements[0].y+this.snakeElementHeight>=fruit.y)) {
+                    fruit.replace();
+                    this.grow(3);
+                    return false;
+                }
+            }, this);
+            
+            // Hindernis
+            for (i = 0; i < 8; i++) {
+                if ((this.snakeElements[0].x<=this.spielfeld.obstacles[i].x+this.spielfeld.obstacles[i].width && this.snakeElements[0].x+this.snakeElementWidth>=this.spielfeld.obstacles[i].x) &&
+                        (this.snakeElements[0].y<=this.spielfeld.obstacles[i].y+this.spielfeld.obstacles[i].height && this.snakeElements[0].y+this.snakeElementHeight>=this.spielfeld.obstacles[i].y)) {
+                    this.spielfeld.obstacles[i].setImage();
+                    this.spielfeld.obstacles[i].setCoordinates();
+                    break;
+                }
+            }
+
+            // Kollision mit sich selber
+            if (this.snakeElementCount > 1) {
+                for (i = 1; i < this.snakeElementCount; i++) {
+                    if (this.snakeElements[i].testCollision && (this.snakeElements[0].x<=this.snakeElements[i].x+this.snakeElementWidth && this.snakeElements[0].x+this.snakeElementWidth>=this.snakeElements[i].x &&
+                            this.snakeElements[0].y<=this.snakeElements[i].y+this.snakeElementHeight && this.snakeElements[0].y+this.snakeElementHeight>=this.snakeElements[i].y)) {
+                        this.isGameOver = true;
+                        break;
+                    }
+                }
+            }
+
+            // Kollision mit anderen Schlangen
+            kijs.Array.each(this.spielfeld.snakes, function(snake) {
+                if (snake !== this.snake && !snake.isGameOver && this.spielfeld.snakes.length > 1) {
+                    for (i = 1; i < snake.snakeElementCount; i++) {
+                        if (snake.snakeElements[i].testCollision && (this.snakeElements[0].x<snake.snakeElements[i].x+snake.snakeElementWidth && this.snakeElements[0].x+snake.snakeElementWidth>snake.snakeElements[i].x) &&
+                                (this.snakeElements[0].y<snake.snakeElements[i].y+snake.snakeElementHeight && this.snakeElements[0].y+snake.snakeElementHeight>snake.snakeElements[i].y)) {
+                            this.isGameOver = true;
+                            break;
+                        }
+                    }
+                }
+            }, this);
+        },
+        
         checkPosition: function() {
             if (this.direction === 'R' && this.spielfeld.width - this.snakeElements[0].x < 100) {
                 this.changeDirection('U');
@@ -130,40 +176,7 @@ kijs.Class.define('snake.MagicSnake', {
         paint: function() {
             var i, width, height;
             
-            var allGameOver = true;
-            kijs.Array.each(this.spielfeld.snakes, function(snake) {
-                if (!snake.isGameOver) {
-                    allGameOver = false;
-                    return false;
-                }
-            }, this);
-
-            if (allGameOver) {
-                this.isGameOver = true;
-            }
-
-            if (this.isGameOver) {
-                return;
-            }
-            
-            // Snake-Elemente mit Kollisionserkennung ermitteln
-            if (this.snakeElementCount > 1) {
-                for (i = 1; i < this.snakeElementCount; i++) {
-                    if (i <= 6) {
-                        this.snakeElements[i].testCollision = false;
-                    } else {
-                        this.snakeElements[i].testCollision = true;
-                    }
-                }
-            }
-            
-            // Werte des Kopfelements bei Spielbeginn definieren
-            if (this.snakeElements[0].x === null) {
-                this.snakeElements[0] = {x:this.x, y:this.y, testCollision:false};
-                this.grow(2);
-                this.lastTime = (new Date()).getTime();
-            }
-            this.directions[0] = this.direction;            
+            this.setSnake();            
 
             // Snake aussen zeichnen
             for (i = 0; i < this.snakeElementCount; i++) {
@@ -241,49 +254,7 @@ kijs.Class.define('snake.MagicSnake', {
 
             // Kollisionserkennung
             // -------------------
-            // Frucht
-            kijs.Array.each(this.spielfeld.fruits, function(fruit) {
-                if ((this.snakeElements[0].x<=fruit.x+fruit.width && this.snakeElements[0].x+this.snakeElementWidth>=fruit.x) &&
-                        (this.snakeElements[0].y<=fruit.y+fruit.height && this.snakeElements[0].y+this.snakeElementHeight>=fruit.y)) {
-                    fruit.replace();
-                    this.grow(3);
-                    return false;
-                }
-            }, this);
-            
-            // Hindernis
-            for (i = 0; i < 8; i++) {
-                if ((this.snakeElements[0].x<=this.spielfeld.obstacles[i].x+this.spielfeld.obstacles[i].width && this.snakeElements[0].x+this.snakeElementWidth>=this.spielfeld.obstacles[i].x) &&
-                        (this.snakeElements[0].y<=this.spielfeld.obstacles[i].y+this.spielfeld.obstacles[i].height && this.snakeElements[0].y+this.snakeElementHeight>=this.spielfeld.obstacles[i].y)) {
-                    this.spielfeld.obstacles[i].setImage();
-                    this.spielfeld.obstacles[i].setCoordinates();
-                    break;
-                }
-            }
-
-            // Kollision mit sich selber
-            if (this.snakeElementCount > 1) {
-                for (i = 1; i < this.snakeElementCount; i++) {
-                    if (this.snakeElements[i].testCollision && (this.snakeElements[0].x<=this.snakeElements[i].x+this.snakeElementWidth && this.snakeElements[0].x+this.snakeElementWidth>=this.snakeElements[i].x &&
-                            this.snakeElements[0].y<=this.snakeElements[i].y+this.snakeElementHeight && this.snakeElements[0].y+this.snakeElementHeight>=this.snakeElements[i].y)) {
-                        this.isGameOver = true;
-                        break;
-                    }
-                }
-            }
-
-            // Kollision mit anderen Schlangen
-            kijs.Array.each(this.spielfeld.snakes, function(snake) {
-                if (snake !== this.snake && !snake.isGameOver && this.spielfeld.snakes.length > 1) {
-                    for (i = 1; i < snake.snakeElementCount; i++) {
-                        if (snake.snakeElements[i].testCollision && (this.snakeElements[0].x<snake.snakeElements[i].x+snake.snakeElementWidth && this.snakeElements[0].x+snake.snakeElementWidth>snake.snakeElements[i].x) &&
-                                (this.snakeElements[0].y<snake.snakeElements[i].y+snake.snakeElementHeight && this.snakeElements[0].y+snake.snakeElementHeight>snake.snakeElements[i].y)) {
-                            this.isGameOver = true;
-                            break;
-                        }
-                    }
-                }
-            }, this);
+            this.checkCollision();
             
             this.checkPosition();
             // Zufälligen Richtungswechsel kalkulieren
@@ -318,6 +289,43 @@ kijs.Class.define('snake.MagicSnake', {
                 this.onBorder = false;
                 this.lastTime = now;
             }
+        },
+        
+        setSnake: function() {
+            var allGameOver = true;
+            kijs.Array.each(this.spielfeld.snakes, function(snake) {
+                if (!snake.isGameOver) {
+                    allGameOver = false;
+                    return false;
+                }
+            }, this);
+
+            if (allGameOver) {
+                this.isGameOver = true;
+            }
+
+            if (this.isGameOver) {
+                return;
+            }
+            
+            // Snake-Elemente mit Kollisionserkennung ermitteln
+            if (this.snakeElementCount > 1) {
+                for (i = 1; i < this.snakeElementCount; i++) {
+                    if (i <= 6) {
+                        this.snakeElements[i].testCollision = false;
+                    } else {
+                        this.snakeElements[i].testCollision = true;
+                    }
+                }
+            }
+            
+            // Werte des Kopfelements bei Spielbeginn definieren
+            if (this.snakeElements[0].x === null) {
+                this.snakeElements[0] = {x:this.x, y:this.y, testCollision:false};
+                this.grow(2);
+                this.lastTime = (new Date()).getTime();
+            }
+            this.directions[0] = this.direction;
         }
 	},
 
