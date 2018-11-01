@@ -265,31 +265,7 @@ kijs.Class.define('snake.Snake', {
                     this.gameOver();
                     break;
                 }
-            }
-
-            // Frucht neu platzieren wenn auf Hindernis
-            kijs.Array.each(this.spielfeld.fruits, function(fruit) {
-                for (i = 0; i < 8; i++) {
-                    if ((fruit.x<=this.spielfeld.obstacles[i].x+this.spielfeld.obstacles[i].width && fruit.x+fruit.width>=this.spielfeld.obstacles[i].x) &&
-                            (fruit.y<=this.spielfeld.obstacles[i].y+this.spielfeld.obstacles[i].height && fruit.y+fruit.height>=this.spielfeld.obstacles[i].y)) {
-                        fruit.replace();
-                        return false;
-                    }
-                }
-            }, this);
-            
-            // Hindernis neu platzieren wenn auf anderem Hindernis
-            kijs.Array.each(this.spielfeld.obstacles, function(obstacle) {
-                for (i = 0; i < 8; i++) {
-                    if (obstacle !== this.spielfeld.obstacles[i]) {
-                        if ((obstacle.x<=this.spielfeld.obstacles[i].x+this.spielfeld.obstacles[i].width && obstacle.x+obstacle.width>=this.spielfeld.obstacles[i].x) &&
-                                (obstacle.y<=this.spielfeld.obstacles[i].y+this.spielfeld.obstacles[i].height && obstacle.y+obstacle.height>=this.spielfeld.obstacles[i].y)) {
-                            obstacle.setCoordinates();
-                            return false;
-                        }
-                    }
-                }
-            }, this);
+            }            
 
             // Kollision mit sich selber
             if (this.snakeElementCount > 1) {
