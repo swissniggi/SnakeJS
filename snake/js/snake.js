@@ -94,6 +94,59 @@ kijs.Class.define('snake.Snake', {
             this.newColor = '#' + newR + newG + newB;
         },
         
+        checkCollision() {
+            // Ausserhalb des Spielfelds
+            if (this.snakeElements[0].x <= 0 || this.snakeElements[0].x+this.snakeElementWidth >= this.spielfeld.width ||
+                    this.snakeElements[0].y <= 0 || this.snakeElements[0].y+this.snakeElementHeight >= this.spielfeld.height) {
+                this.gameOver();
+            }
+
+            // Frucht
+            kijs.Array.each(this.spielfeld.fruits, function(fruit) {
+                if ((this.snakeElements[0].x<=fruit.x+fruit.width && this.snakeElements[0].x+this.snakeElementWidth>=fruit.x) &&
+                        (this.snakeElements[0].y<=fruit.y+fruit.height && this.snakeElements[0].y+this.snakeElementHeight>=fruit.y)) {
+                    fruit.replace();
+                    this.score++;
+                    this.spielfeld.updateScores();
+                    this.grow(3);
+                    return false;
+                }
+            }, this);
+
+            // Hindernis
+            for (i = 0; i < 8; i++) {
+                if ((this.snakeElements[0].x<=this.spielfeld.obstacles[i].x+this.spielfeld.obstacles[i].width && this.snakeElements[0].x+this.snakeElementWidth>=this.spielfeld.obstacles[i].x) &&
+                        (this.snakeElements[0].y<=this.spielfeld.obstacles[i].y+this.spielfeld.obstacles[i].height && this.snakeElements[0].y+this.snakeElementHeight>=this.spielfeld.obstacles[i].y)) {
+                    this.gameOver();
+                    break;
+                }
+            }            
+
+            // Kollision mit sich selber
+            if (this.snakeElementCount > 1) {
+                for (i = 1; i < this.snakeElementCount; i++) {
+                    if (this.snakeElements[i].testCollision && (this.snakeElements[0].x<=this.snakeElements[i].x+this.snakeElementWidth && this.snakeElements[0].x+this.snakeElementWidth>=this.snakeElements[i].x &&
+                            this.snakeElements[0].y<=this.snakeElements[i].y+this.snakeElementHeight && this.snakeElements[0].y+this.snakeElementHeight>=this.snakeElements[i].y)) {
+                        this.gameOver();
+                        break;
+                    }
+                }
+            }
+
+            // Kollision mit anderen Schlangen
+            kijs.Array.each(this.spielfeld.snakes, function(snake) {
+                if (snake !== this.snake && !snake.isGameOver && this.spielfeld.snakes.length > 1) {
+                    for (i = 1; i < snake.snakeElementCount; i++) {
+                        if (snake.snakeElements[i].testCollision && (this.snakeElements[0].x<snake.snakeElements[i].x+snake.snakeElementWidth && this.snakeElements[0].x+snake.snakeElementWidth>snake.snakeElements[i].x) &&
+                                (this.snakeElements[0].y<snake.snakeElements[i].y+snake.snakeElementHeight && this.snakeElements[0].y+snake.snakeElementHeight>snake.snakeElements[i].y)) {
+                            this.gameOver();
+                            break;
+                        }
+                    }
+                }
+            }, this);
+        },
+        
         gameOver: function() {
             this.isGameOver = true;
             var allGameOver = true;
@@ -141,28 +194,7 @@ kijs.Class.define('snake.Snake', {
         paint: function() {
             var i, width, height;
 
-            if (this.isGameOver) {
-                return;
-            }
-            
-            // Snake-Elemente mit Kollisionserkennung ermitteln
-            if (this.snakeElementCount > 1) {
-                for (i = 1; i < this.snakeElementCount; i++) {
-                    if (i <= 6) {
-                        this.snakeElements[i].testCollision = false;
-                    } else {
-                        this.snakeElements[i].testCollision = true;
-                    }
-                }
-            }
-            
-            // Werte des Kopfelements bei Spielbeginn definieren
-            if (this.snakeElements[0].x === null) {
-                this.snakeElements[0] = {x:this.x, y:this.y, testCollision:false};
-                // this.grow() zwei Mal ausführen für Initiallänge(3)
-                this.grow(2);
-            }
-            this.directions[0] = this.direction;
+            this.setSnake();
 
             // Snake aussen zeichnen
             for (i = 0; i < this.snakeElementCount; i++) {
@@ -239,59 +271,36 @@ kijs.Class.define('snake.Snake', {
             }
 
             // Kollisionserkennung
-            // -------------------
-            // Ausserhalb des Spielfelds
-            if (this.snakeElements[0].x <= 0 || this.snakeElements[0].x+this.snakeElementWidth >= this.spielfeld.width ||
-                    this.snakeElements[0].y <= 0 || this.snakeElements[0].y+this.snakeElementHeight >= this.spielfeld.height) {
-                this.gameOver();
+            this.checkCollision();           
+        },
+        
+        setSnake() {
+            if (this.isGameOver) {
+                return;
             }
-
-            // Frucht
-            kijs.Array.each(this.spielfeld.fruits, function(fruit) {
-                if ((this.snakeElements[0].x<=fruit.x+fruit.width && this.snakeElements[0].x+this.snakeElementWidth>=fruit.x) &&
-                        (this.snakeElements[0].y<=fruit.y+fruit.height && this.snakeElements[0].y+this.snakeElementHeight>=fruit.y)) {
-                    fruit.replace();
-                    this.score++;
-                    this.spielfeld.updateScores();
-                    this.grow(3);
-                    return false;
-                }
-            }, this);
-
-            // Hindernis
-            for (i = 0; i < 8; i++) {
-                if ((this.snakeElements[0].x<=this.spielfeld.obstacles[i].x+this.spielfeld.obstacles[i].width && this.snakeElements[0].x+this.snakeElementWidth>=this.spielfeld.obstacles[i].x) &&
-                        (this.snakeElements[0].y<=this.spielfeld.obstacles[i].y+this.spielfeld.obstacles[i].height && this.snakeElements[0].y+this.snakeElementHeight>=this.spielfeld.obstacles[i].y)) {
-                    this.gameOver();
-                    break;
-                }
-            }            
-
-            // Kollision mit sich selber
+            
+            // Snake-Elemente mit Kollisionserkennung ermitteln
             if (this.snakeElementCount > 1) {
                 for (i = 1; i < this.snakeElementCount; i++) {
-                    if (this.snakeElements[i].testCollision && (this.snakeElements[0].x<=this.snakeElements[i].x+this.snakeElementWidth && this.snakeElements[0].x+this.snakeElementWidth>=this.snakeElements[i].x &&
-                            this.snakeElements[0].y<=this.snakeElements[i].y+this.snakeElementHeight && this.snakeElements[0].y+this.snakeElementHeight>=this.snakeElements[i].y)) {
-                        this.gameOver();
-                        break;
+                    if (i <= 6) {
+                        this.snakeElements[i].testCollision = false;
+                    } else {
+                        this.snakeElements[i].testCollision = true;
                     }
                 }
             }
-
-            // Kollision mit anderen Schlangen
-            kijs.Array.each(this.spielfeld.snakes, function(snake) {
-                if (snake !== this.snake && !snake.isGameOver && this.spielfeld.snakes.length > 1) {
-                    for (i = 1; i < snake.snakeElementCount; i++) {
-                        if (snake.snakeElements[i].testCollision && (this.snakeElements[0].x<snake.snakeElements[i].x+snake.snakeElementWidth && this.snakeElements[0].x+snake.snakeElementWidth>snake.snakeElements[i].x) &&
-                                (this.snakeElements[0].y<snake.snakeElements[i].y+snake.snakeElementHeight && this.snakeElements[0].y+snake.snakeElementHeight>snake.snakeElements[i].y)) {
-                            this.gameOver();
-                            break;
-                        }
-                    }
-                }
-            }, this);           
+            
+            // Werte des Kopfelements bei Spielbeginn definieren
+            if (this.snakeElements[0].x === null) {
+                this.snakeElements[0] = {x:this.x, y:this.y, testCollision:false};
+                // this.grow() zwei Mal ausführen für Initiallänge(3)
+                this.grow(2);
+            }
+            this.directions[0] = this.direction;
         },
 
+        // EVENTS
+        //--------
         _onStickEvent: function(e) {
             this.currentTime = (new Date()).getTime();
 
