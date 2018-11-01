@@ -116,7 +116,7 @@ kijs.Class.define('snake.MagicSnake', {
 
             // Kollision mit anderen Schlangen
             kijs.Array.each(this.spielfeld.snakes, function(snake) {
-                if (snake !== this.snake && !snake.isGameOver && this.spielfeld.snakes.length > 1) {
+                if (snake !== this && !snake.isGameOver) {
                     for (i = 1; i < snake.snakeElementCount; i++) {
                         if (snake.snakeElements[i].testCollision && (this.snakeElements[0].x<snake.snakeElements[i].x+snake.snakeElementWidth && this.snakeElements[0].x+snake.snakeElementWidth>snake.snakeElements[i].x) &&
                                 (this.snakeElements[0].y<snake.snakeElements[i].y+snake.snakeElementHeight && this.snakeElements[0].y+snake.snakeElementHeight>snake.snakeElements[i].y)) {
@@ -141,6 +141,20 @@ kijs.Class.define('snake.MagicSnake', {
             } else if (this.direction === 'D' && this.spielfeld.height - this.snakeElements[0].y < 100) {
                 this.changeDirection('R');
                 this.onBorder = true;
+            }
+        },
+        
+        gameOver: function() {
+                       var allGameOver = true;
+            kijs.Array.each(this.spielfeld.snakes, function(snake) {
+                if (!snake.isGameOver) {
+                    allGameOver = false;
+                    return false;
+                }
+            }, this);
+
+            if (allGameOver) {
+                this.isGameOver = true;
             }
         },
 
@@ -175,6 +189,11 @@ kijs.Class.define('snake.MagicSnake', {
 
         paint: function() {
             var i, width, height;
+            
+            this.gameOver();
+            if (this.isGameOver) {
+                return;
+            }
             
             this.setSnake();            
 
@@ -253,7 +272,6 @@ kijs.Class.define('snake.MagicSnake', {
             }
 
             // Kollisionserkennung
-            // -------------------
             this.checkCollision();
             
             this.checkPosition();
@@ -291,23 +309,7 @@ kijs.Class.define('snake.MagicSnake', {
             }
         },
         
-        setSnake: function() {
-            var allGameOver = true;
-            kijs.Array.each(this.spielfeld.snakes, function(snake) {
-                if (!snake.isGameOver) {
-                    allGameOver = false;
-                    return false;
-                }
-            }, this);
-
-            if (allGameOver) {
-                this.isGameOver = true;
-            }
-
-            if (this.isGameOver) {
-                return;
-            }
-            
+        setSnake: function() {            
             // Snake-Elemente mit Kollisionserkennung ermitteln
             if (this.snakeElementCount > 1) {
                 for (i = 1; i < this.snakeElementCount; i++) {
