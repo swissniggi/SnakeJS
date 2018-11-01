@@ -135,11 +135,29 @@ kijs.Class.define('snake.Spielfeld', {
             // Hindernisse zeichnen
             kijs.Array.each(this.obstacles, function(obstacle) {
                 obstacle.paint();
+                // Hindernis neu platzieren wenn auf anderem Hindernis
+                for (i = 0; i < 8; i++) {
+                    if (obstacle !== this.obstacles[i]) {
+                        if ((obstacle.x<=this.obstacles[i].x+this.obstacles[i].width && obstacle.x+obstacle.width>=this.obstacles[i].x) &&
+                                (obstacle.y<=this.obstacles[i].y+this.obstacles[i].height && obstacle.y+obstacle.height>=this.obstacles[i].y)) {
+                            obstacle.setCoordinates();
+                            return false;
+                        }
+                    }
+                }
             }, this);
             
             // Früchte zeichnen
             kijs.Array.each(this.fruits, function(fruit) {
                 fruit.paint();
+                // Frucht neu platzieren wenn auf Hindernis
+                for (i = 0; i < 8; i++) {
+                    if ((fruit.x<=this.obstacles[i].x+this.obstacles[i].width && fruit.x+fruit.width>=this.obstacles[i].x) &&
+                            (fruit.y<=this.obstacles[i].y+this.obstacles[i].height && fruit.y+fruit.height>=this.obstacles[i].y)) {
+                        fruit.replace();
+                        return false;
+                    }
+                }
             }, this);
 
             // Schlangen zeichnen
