@@ -143,20 +143,6 @@ kijs.Class.define('snake.MagicSnake', {
                 this.onBorder = true;
             }
         },
-        
-        gameOver: function() {
-                       var allGameOver = true;
-            kijs.Array.each(this.spielfeld.snakes, function(snake) {
-                if (!snake.isGameOver) {
-                    allGameOver = false;
-                    return false;
-                }
-            }, this);
-
-            if (allGameOver) {
-                this.isGameOver = true;
-            }
-        },
 
         grow: function(count) {
             while (count > 0) {
@@ -190,7 +176,18 @@ kijs.Class.define('snake.MagicSnake', {
         paint: function() {
             var i, width, height;
             
-            this.gameOver();
+            var allGameOver = true;
+            kijs.Array.each(this.spielfeld.snakes, function(snake) {
+                if (!snake.isGameOver) {
+                    allGameOver = false;
+                    return false;
+                }
+            }, this);
+
+            if (allGameOver) {
+                this.isGameOver = true;
+            }
+                        
             if (this.isGameOver) {
                 return;
             }
