@@ -203,8 +203,10 @@ kijs.Class.define('snake.Spielfeld', {
                 this.snakes.push(new snake.Snake(this, 3, this.width-35, this.height/2-17, 'L', '#01DF3A', {U:'l', D:'j', R:'k', L:'i'}));
             }
             
+            var letters = ['U', 'D', 'R', 'L'];
+            
             if (this.magicMode) {
-                this.snakes.push(new snake.MagicSnake(this, this.width/3, this.height-35, 'U', '#C0C0C0'));
+                this.snakes.push(new snake.MagicSnake(this, this.width/2-17, this.height/2-17, letters[Math.round(Math.random() * 3)], '#C0C0C0'));
             }
 
             // Fruits erstellen
