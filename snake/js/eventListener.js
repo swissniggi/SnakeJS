@@ -10,7 +10,7 @@ snake.EventListener = class snake_EventListener {
             'ArrowLeft' : 'L',
             'ArrowDown' : 'D',
             'ArrowUp' : 'U',
-            ' ' : 'Pause'
+            'Shift' : 'Pause'
         };
         
         this.stickYellowKeys = {
