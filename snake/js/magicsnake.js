@@ -46,7 +46,7 @@ kijs.Class.define('snake.MagicSnake', {
         isGameOver: false,
         lastTime: null,
         newColor: null,
-        no: null,
+        obstacleTouched: null,
         onBorder: false,
         snakeElements: null,
         snakeElementCount: 1,
@@ -97,9 +97,23 @@ kijs.Class.define('snake.MagicSnake', {
             for (i = 0; i < 8; i++) {
                 if ((this.snakeElements[0].x<=this.spielfeld.obstacles[i].x+this.spielfeld.obstacles[i].width && this.snakeElements[0].x+this.snakeElementWidth>=this.spielfeld.obstacles[i].x) &&
                         (this.snakeElements[0].y<=this.spielfeld.obstacles[i].y+this.spielfeld.obstacles[i].height && this.snakeElements[0].y+this.snakeElementHeight>=this.spielfeld.obstacles[i].y)) {
-                    this.spielfeld.obstacles[i].setImage();
-                    this.spielfeld.obstacles[i].setCoordinates();
+                    if (this.spielfeld.obstacles[i] !== this.obstacleTouched) {
+                        this.lastTime = (new Date()).getTime();
+                        this.obstacleTouched = this.spielfeld.obstacles[i];
+                        
+                        if (this.direction === 'R') {
+                            this.changeDirection('U');                            
+                        } else if (this.direction === 'L') {
+                            this.changeDirection('D');
+                        } else if (this.direction === 'U') {
+                            this.changeDirection('L');
+                        } else if (this.direction === 'D') {
+                            this.changeDirection('R');
+                        }
+                    }
                     break;
+                } else if (i === 7) {
+                    this.obstacleTouched = null;
                 }
             }
 
@@ -120,6 +134,7 @@ kijs.Class.define('snake.MagicSnake', {
                     for (i = 1; i < snake.snakeElementCount; i++) {
                         if (snake.snakeElements[i].testCollision && (this.snakeElements[0].x<snake.snakeElements[i].x+snake.snakeElementWidth && this.snakeElements[0].x+snake.snakeElementWidth>snake.snakeElements[i].x) &&
                                 (this.snakeElements[0].y<snake.snakeElements[i].y+snake.snakeElementHeight && this.snakeElements[0].y+snake.snakeElementHeight>snake.snakeElements[i].y)) {
+                            //snake.gameOver();
                             this.isGameOver = true;
                             break;
                         }
@@ -129,17 +144,21 @@ kijs.Class.define('snake.MagicSnake', {
         },
         
         checkPosition: function() {
-            if (this.direction === 'R' && this.spielfeld.width - this.snakeElements[0].x < 100) {
+            if (this.direction === 'R' && this.spielfeld.width - this.snakeElements[0].x < 50) {
                 this.changeDirection('U');
+                this.lastTime = (new Date()).getTime();
                 this.onBorder = true;
-            } else if (this.direction === 'U' && this.snakeElements[0].y < 65) {
+            } else if (this.direction === 'U' && this.snakeElements[0].y < 15) {
                 this.changeDirection('L');
+                this.lastTime = (new Date()).getTime();
                 this.onBorder = true;
-            } else if (this.direction === 'L' && this.snakeElements[0].x < 65) {
+            } else if (this.direction === 'L' && this.snakeElements[0].x < 15) {
                 this.changeDirection('D');
+                this.lastTime = (new Date()).getTime();
                 this.onBorder = true;
-            } else if (this.direction === 'D' && this.spielfeld.height - this.snakeElements[0].y < 100) {
+            } else if (this.direction === 'D' && this.spielfeld.height - this.snakeElements[0].y < 50) {
                 this.changeDirection('R');
+                this.lastTime = (new Date()).getTime();
                 this.onBorder = true;
             }
         },
@@ -174,19 +193,7 @@ kijs.Class.define('snake.MagicSnake', {
         },
 
         paint: function() {
-            var i, width, height;
-            
-            var allGameOver = true;
-            kijs.Array.each(this.spielfeld.snakes, function(snake) {
-                if (!snake.isGameOver) {
-                    allGameOver = false;
-                    return false;
-                }
-            }, this);
-
-            if (allGameOver) {
-                this.isGameOver = true;
-            }
+            var i, width, height;            
                         
             if (this.isGameOver) {
                 return;
@@ -253,18 +260,16 @@ kijs.Class.define('snake.MagicSnake', {
                     var img = new Image();
                     switch(this.direction) {
                         case 'R': img.src = '../pictures/eyes_right.png';
-                                  this.context.drawImage(img, this.snakeElements[i].x, this.snakeElements[i].y, this.snakeElementWidth, this.snakeElementHeight);
                                   break;
                         case 'L': img.src = '../pictures/eyes_left.png';
-                                  this.context.drawImage(img, this.snakeElements[i].x, this.snakeElements[i].y, this.snakeElementWidth, this.snakeElementHeight);
                                   break;
                         case 'U': img.src = '../pictures/eyes_up.png';
-                                  this.context.drawImage(img, this.snakeElements[i].x, this.snakeElements[i].y, this.snakeElementWidth, this.snakeElementHeight);
                                   break;
                         case 'D': img.src = '../pictures/eyes_down.png';
-                                  this.context.drawImage(img, this.snakeElements[i].x, this.snakeElements[i].y, this.snakeElementWidth, this.snakeElementHeight);
+                                  
                                   break;
                     }
+                    this.context.drawImage(img, this.snakeElements[i].x, this.snakeElements[i].y, this.snakeElementWidth, this.snakeElementHeight);
                 }
             }
 
@@ -279,7 +284,7 @@ kijs.Class.define('snake.MagicSnake', {
         randomTurn: function() {
             var now = (new Date()).getTime();
             
-            if (now % 7 === 0 && now - this.lastTime > 2000) {
+            if (now % 7 === 0 && now - this.lastTime > 2000 && !this.onObstacle) {
                 if (Math.round(Math.random()) === 0 || this.onBorder) {
                     if (this.direction === 'R') {
                         this.changeDirection('U');
