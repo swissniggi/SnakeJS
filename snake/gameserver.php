@@ -23,7 +23,7 @@ function checkScore($dump) {
 
 function getScores($maxscore, $name) {
     $score = '';
-    $appex = '';
+    $suffix = '';
     $scorestring = '';
     
     if(filesize("highscore_snake.txt") > 0) {
@@ -42,7 +42,7 @@ function getScores($maxscore, $name) {
             // neuer Wochen-Highscore?
             if($week !== date("W") || $maxscore > $scores[0]) {
                 $scorestring = $scorestring . $maxscore . ';' . $name . ';' . date("d.m.Y") . ';';
-                $appex = ';W';
+                $suffix = ';W';
             } else {
                 $scorestring = $scorestring . $scores[0] . ';' . $scores[1] . ';' . $scores[2] . ';';
             }                    
@@ -50,7 +50,7 @@ function getScores($maxscore, $name) {
             // neuer Monats-Highscore?
             if($month !== date("m") || $maxscore > $scores[3]) {
                 $scorestring = $scorestring . $maxscore . ';' . $name . ';' . date("d.m.Y") . ';';
-                $appex = ';M';
+                $suffix = ';M';
             } else {
                 $scorestring = $scorestring . $scores[3] . ';' . $scores[4] . ';' . $scores[5] . ';';
             }                    
@@ -58,11 +58,11 @@ function getScores($maxscore, $name) {
             // neuer Jahres-Highscore?
             if($year !== date("Y") || $maxscore > $scores[6]) {
                 $scorestring = $scorestring . $maxscore . ';' . $name . ';' . date("d.m.Y");
-                $appex = ';Y';
+                $suffix = ';Y';
             } else {
                 $scorestring = $scorestring . $scores[6] . ';' . $scores[7] . ';' . $scores[8];
             }
-            $scorestring .= $appex;
+            $scorestring .= $suffix;
         }
     } else {
         $scorestring = "0;test;25.09.2017;0;test;25.09.2017;0;test;25.09.2017";
