@@ -53,7 +53,19 @@ kijs.Class.define('snake.GameOver', {
         
         prepareMsg: function() {
             // Game-Over-Nachricht definieren
-            if (this.maxScore <= this.highScore[0] && this.highScore[1] !== '' || this.maxScore === 0) {
+            if (this.maxScore == this.highScore[0] && this.highScore[1] === '' && this.maxScore <= this.highScore[3] && this.maxScore <= this.highScore[6]) {
+                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
+                         + '<p class="highscore_new"><u>Neuer Wochen-Highscore!</u></p>';
+                this.showGameOver(true);
+            } else if (this.maxScore == this.highScore[0] && this.maxScore == this.highScore[3] && this.highScore[4] === '' && this.maxScore <= this.highScore[6]) {
+                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
+                         + '<p class="highscore_new"><u>Neuer Monats-Highscore!</u></p>';
+                this.showGameOver(true);
+            } else if (this.maxScore == this.highScore[0] && this.maxScore == this.highScore[3] && this.maxScore == this.highScore[6] && this.highScore[7] === '') {
+                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
+                         + '<p class="highscore_new"><u>Neuer Jahres-Highscore!</u></p>';
+                this.showGameOver(true);
+            } else {
                 this.msg = '<p class="highscore_gameover">Game Over!</p>' + this.msg
                          + '<p>Wochen-Highscore: <span class="highscore_score">' + this.highScore[0]
                          + ' Punkte</span><br /> aufgestellt von: <span class="highscore_name">'
@@ -65,18 +77,6 @@ kijs.Class.define('snake.GameOver', {
                          + ' Punkte</span><br /> aufgestellt von: <span class="highscore_name">'
                          + this.highScore[7] + '</span><br />am: ' + this.highScore[8] + '</p>';
                 this.showGameOver(false);
-            } else if (this.maxScore == this.highScore[0] && this.maxScore != this.highScore[3] && this.maxScore != this.highScore[6]) {
-                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
-                         + '<p class="highscore_new"><u>Neuer Wochen-Highscore!</u></p>';
-                this.showGameOver(true);
-            } else if (this.maxScore == this.highScore[0] && this.maxScore == this.highScore[3] && this.maxScore != this.highScore[6]) {
-                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
-                         + '<p class="highscore_new"><u>Neuer Monats-Highscore!</u></p>';
-                this.showGameOver(true);
-            } else if (this.maxScore == this.highScore[0] && this.maxScore == this.highScore[3] && this.maxScore == this.highScore[6]) {
-                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
-                         + '<p class="highscore_new"><u>Neuer Jahres-Highscore!</u></p>';
-                this.showGameOver(true);
             }
         },
         
