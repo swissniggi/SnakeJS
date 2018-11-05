@@ -258,18 +258,16 @@ kijs.Class.define('snake.Snake', {
                     var img = new Image();
                     switch(this.direction) {
                         case 'R': img.src = '../pictures/eyes_right.png';
-                                  this.context.drawImage(img, this.snakeElements[i].x, this.snakeElements[i].y, this.snakeElementWidth, this.snakeElementHeight);
                                   break;
                         case 'L': img.src = '../pictures/eyes_left.png';
-                                  this.context.drawImage(img, this.snakeElements[i].x, this.snakeElements[i].y, this.snakeElementWidth, this.snakeElementHeight);
                                   break;
                         case 'U': img.src = '../pictures/eyes_up.png';
-                                  this.context.drawImage(img, this.snakeElements[i].x, this.snakeElements[i].y, this.snakeElementWidth, this.snakeElementHeight);
                                   break;
                         case 'D': img.src = '../pictures/eyes_down.png';
-                                  this.context.drawImage(img, this.snakeElements[i].x, this.snakeElements[i].y, this.snakeElementWidth, this.snakeElementHeight);
+                                  
                                   break;
                     }
+                    this.context.drawImage(img, this.snakeElements[i].x, this.snakeElements[i].y, this.snakeElementWidth, this.snakeElementHeight);
                 }
             }
 
