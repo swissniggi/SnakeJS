@@ -12,7 +12,7 @@ function checkScore($dump) {
     if($name !== '') {
         // neuen Highscore speichern
         $handle = fopen("highscore_snake.txt", "w");
-        fwrite($handle, $scorestring);
+        fwrite($handle, mb_substr($scorestring, 0, -2));
         fclose($handle);
         echo json_encode($scorestring);
     } else {
@@ -45,7 +45,7 @@ function getScores($maxscore, $name) {
                 $suffix = ';W';
             } else {
                 $scorestring = $scorestring . $scores[0] . ';' . $scores[1] . ';' . $scores[2] . ';';
-            }                    
+            }
             
             // neuer Monats-Highscore?
             if($month !== date("m") || $maxscore > $scores[3]) {
@@ -53,7 +53,7 @@ function getScores($maxscore, $name) {
                 $suffix = ';M';
             } else {
                 $scorestring = $scorestring . $scores[3] . ';' . $scores[4] . ';' . $scores[5] . ';';
-            }                    
+            }
             
             // neuer Jahres-Highscore?
             if($year !== date("Y") || $maxscore > $scores[6]) {
