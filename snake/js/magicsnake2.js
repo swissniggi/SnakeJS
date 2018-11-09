@@ -128,6 +128,7 @@ kijs.Class.define('snake.MagicSnake', {
                 }
             }
             
+            // KOllision mit anderen Schlangen
             kijs.Array.each(this.spielfeld.snakes, function(snake) {
                 if (snake !== this && !snake.isGameOver) {
                     for (i = 0; i < snake.snakeRectangles.length; i++) {
