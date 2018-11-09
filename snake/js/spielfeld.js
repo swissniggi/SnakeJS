@@ -92,7 +92,7 @@ kijs.Class.define('snake.Spielfeld', {
             this.snakemusic = null;
             this.msg = '';
             var maxScore = 0;
-            var s_names = ['Rote', 'Gelbe', 'Blaue', 'Gruene', 'Silberne', 'Goldene'];
+            var s_names = ['Rote', 'Gelbe', 'Blaue', 'Gruene'];
 
             kijs.Array.each(this.snakes, function(snake) {
                 if (snake.basename === 'Snake') {
@@ -104,7 +104,7 @@ kijs.Class.define('snake.Spielfeld', {
                 }
             }, this);
 
-            if (this.snakes.length > 1 && lastSnake.basename === 'Snake') {
+            if ((this.snakes.length > 1 && !this.magicMode) || (this.snakes.length > 2 && this.magicMode)) {
                 this.msg += '<p>Die <span style="color: ' + lastSnake.borderColor + '">' + s_names[lastSnake.no] + '</span> Schlange hat am laengsten ueberlebt!</p>';
                 //-> das Font 'Silkscreen' hat keine Umlaute, d.h. ä = ae, ü = ue
             }
@@ -192,15 +192,19 @@ kijs.Class.define('snake.Spielfeld', {
             // Snakes erstellen
              if (this.snakeOne) {
                 this.snakes.push(new snake.Snake(this, 0, this.width/2-17, this.height-35, 'U', '#FF0000', {R:'ArrowRight', L:'ArrowLeft', D:'ArrowDown', U:'ArrowUp'}));
+                this.spielfeldwrapper.style.marginBottom = "25px";
             }
             if (this.snakeTwo) {
                 this.snakes.push(new snake.Snake(this, 1, 35, this.height/2-17, 'R', '#FFE000', {D:'d', U:'a', L:'s', R:'w'}));
+                this.spielfeldwrapper.style.marginLeft = "25px";
             }
             if (this.snakeThree) {
                 this.snakes.push(new snake.Snake(this, 2, this.width/2-17, 35, 'D', '#0080FF', {L:'6', R:'4', U:'2', D:'8'}));
+                this.spielfeldwrapper.style.marginTop = "25px";
             }
             if (this.snakeFour) {
                 this.snakes.push(new snake.Snake(this, 3, this.width-35, this.height/2-17, 'L', '#01DF3A', {U:'l', D:'j', R:'k', L:'i'}));
+                this.spielfeldwrapper.style.marginRight = "25px";
             }
             
             var letters = ['U', 'D', 'R', 'L'];
