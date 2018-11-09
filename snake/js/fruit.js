@@ -28,10 +28,27 @@ kijs.Class.define('snake.Fruit', {
         height: 56,
         width: 52,
         x: null,
-        y: null,       
+        y: null,
 
 
         // PUBLIC
+        checkCollision(snake) {
+            if ((snake.snakeCircles[0].x<=this.x+this.width && snake.snakeCircles[0].x+snake.snakeCircleWidth>=this.x) &&
+                    (snake.snakeCircles[0].y<=this.y+this.height && snake.snakeCircles[0].y+snake.snakeCircleHeight>=this.y)) {
+                this.replace();
+                // Frucht neu platzieren wenn auf Hindernis
+                for (i = 0; i < 8; i++) {
+                    while ((this.x<=snake.spielfeld.obstacles[i].x+snake.spielfeld.obstacles[i].width && this.x+this.width>=snake.spielfeld.obstacles[i].x) &&
+                            (this.y<=snake.spielfeld.obstacles[i].y+snake.spielfeld.obstacles[i].height && this.y+this.height>=snake.spielfeld.obstacles[i].y)) {
+                        this.replace();
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
+        },
+        
         paint: function() {
             var img = new Image();
             img.src = "../pictures/cherries.png";

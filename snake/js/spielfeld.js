@@ -29,7 +29,7 @@ kijs.Class.define('snake.Spielfeld', {
         eventhandler: null,
         fruits: null,
         fruitsCount: 20,
-        height: null,
+        height: 0,
         highscore: null,
         isRunning: false,
         magicMode: false,
@@ -46,7 +46,7 @@ kijs.Class.define('snake.Spielfeld', {
         snakeFour: false,
         spielfeld: null,
         spielfeldwrapper: null,
-        width: null,
+        width: 0,
         _loopHandle: null,
 
 
@@ -134,30 +134,12 @@ kijs.Class.define('snake.Spielfeld', {
 
             // Hindernisse zeichnen
             kijs.Array.each(this.obstacles, function(obstacle) {
-                obstacle.paint();
-                // Hindernis neu platzieren wenn auf anderem Hindernis
-                for (i = 0; i < 8; i++) {
-                    if (obstacle !== this.obstacles[i]) {
-                        if ((obstacle.x<=this.obstacles[i].x+this.obstacles[i].width && obstacle.x+obstacle.width>=this.obstacles[i].x) &&
-                                (obstacle.y<=this.obstacles[i].y+this.obstacles[i].height && obstacle.y+obstacle.height>=this.obstacles[i].y)) {
-                            obstacle.setCoordinates();
-                            return false;
-                        }
-                    }
-                }
+                obstacle.paint();                
             }, this);
             
             // Früchte zeichnen
             kijs.Array.each(this.fruits, function(fruit) {
-                fruit.paint();
-                // Frucht neu platzieren wenn auf Hindernis
-                for (i = 0; i < 8; i++) {
-                    if ((fruit.x<=this.obstacles[i].x+this.obstacles[i].width && fruit.x+fruit.width>=this.obstacles[i].x) &&
-                            (fruit.y<=this.obstacles[i].y+this.obstacles[i].height && fruit.y+fruit.height>=this.obstacles[i].y)) {
-                        fruit.replace();
-                        return false;
-                    }
-                }
+                fruit.paint();                
             }, this);
 
             // Schlangen zeichnen
@@ -180,8 +162,8 @@ kijs.Class.define('snake.Spielfeld', {
         
         prepare: function() {
             // Höhe und Breite des Spielfelds festlegen
-            this.width = this.spielfeldwrapper.offsetWidth;
-            this.height = this.spielfeldwrapper.offsetHeight;
+            this.width = this.spielfeldwrapper.offsetWidth + this.width;
+            this.height = this.spielfeldwrapper.offsetHeight + this.height;            
 
             var _this = this;
 
@@ -191,38 +173,54 @@ kijs.Class.define('snake.Spielfeld', {
 
             // Snakes erstellen
              if (this.snakeOne) {
-                this.snakes.push(new snake.Snake(this, 0, this.width/2-17, this.height-35, 'U', '#FF0000', {R:'ArrowRight', L:'ArrowLeft', D:'ArrowDown', U:'ArrowUp'}));
                 this.spielfeldwrapper.style.marginBottom = "25px";
+                this.snakes.push(new snake.Snake(this, 0, this.width/2-17, this.height-35, 'U', '#FF0000', {R:'ArrowRight', L:'ArrowLeft', D:'ArrowDown', U:'ArrowUp'}));                               
             }
             if (this.snakeTwo) {
-                this.snakes.push(new snake.Snake(this, 1, 35, this.height/2-17, 'R', '#FFE000', {D:'d', U:'a', L:'s', R:'w'}));
                 this.spielfeldwrapper.style.marginLeft = "25px";
+                this.snakes.push(new snake.Snake(this, 1, 35, this.height/2-17, 'R', '#FFE000', {D:'d', U:'a', L:'s', R:'w'}));                                
             }
             if (this.snakeThree) {
-                this.snakes.push(new snake.Snake(this, 2, this.width/2-17, 35, 'D', '#0080FF', {L:'6', R:'4', U:'2', D:'8'}));
                 this.spielfeldwrapper.style.marginTop = "25px";
+                this.snakes.push(new snake.Snake(this, 2, this.width/2-17, 35, 'D', '#0080FF', {L:'6', R:'4', U:'2', D:'8'}));                               
             }
             if (this.snakeFour) {
-                this.snakes.push(new snake.Snake(this, 3, this.width-35, this.height/2-17, 'L', '#01DF3A', {U:'l', D:'j', R:'k', L:'i'}));
                 this.spielfeldwrapper.style.marginRight = "25px";
+                this.snakes.push(new snake.Snake(this, 3, this.width-35, this.height/2-17, 'L', '#01DF3A', {U:'l', D:'j', R:'k', L:'i'}));                                
             }
-            
+                        
             var letters = ['U', 'D', 'R', 'L'];
             
             if (this.magicMode) {
                 this.snakes.push(new snake.MagicSnake(this, this.width/2-17, this.height/2-17, letters[Math.round(Math.random() * 3)], '#C0C0C0'));
-            }
-
-            // Fruits erstellen
-            for (i = 0; i < this.fruitsCount; i++) {
-                var fruit = new snake.Fruit(this);
-                this.fruits.push(fruit);
-            }
+            }            
             
             // Hindernisse erstellen
             for (i = 0; i < 8; i++) {
                 var obstacle = new snake.Obstacle(this);
                 this.obstacles.push(obstacle);
+                // Koordinaten des Hindernisses neu berechnen wenn auf anderem Hindernis
+                for (j = 0; j < this.obstacles.length; j++) {
+                    if (obstacle !== this.obstacles[j]) {
+                        while ((obstacle.x<=this.obstacles[j].x+this.obstacles[j].width && obstacle.x+obstacle.width>=this.obstacles[j].x) &&
+                                (obstacle.y<=this.obstacles[j].y+this.obstacles[j].height && obstacle.y+obstacle.height>=this.obstacles[j].y)) {
+                            obstacle.setCoordinates();
+                        }
+                    }
+                }
+            }
+            
+            // Fruits erstellen
+            for (i = 0; i < this.fruitsCount; i++) {
+                var fruit = new snake.Fruit(this);
+                this.fruits.push(fruit);
+                // Frucht neu platzieren wenn auf Hindernis
+                for (j = 0; j < 8; j++) {
+                    while ((fruit.x<=this.obstacles[j].x+this.obstacles[j].width && fruit.x+fruit.width>=this.obstacles[j].x) &&
+                            (fruit.y<=this.obstacles[j].y+this.obstacles[j].height && fruit.y+fruit.height>=this.obstacles[j].y)) {
+                        fruit.replace();
+                    }
+                }
             }
 
             this.updateScores();
@@ -248,10 +246,12 @@ kijs.Class.define('snake.Spielfeld', {
                             this.balken[0].classList.add('slidefrombottom');
                             this.balken[3].classList.add('redSnakeVisible');
                             this.snakeOne = true;
+                            this.height -= 25;
                         } else {
                             this.balken[0].classList.remove('slidefrombottom');
                             this.balken[3].classList.remove('redSnakeVisible');
                             this.snakeOne = false;
+                            this.height += 25;
                         }
                         break;
                     case 65:
@@ -261,9 +261,11 @@ kijs.Class.define('snake.Spielfeld', {
 						if (!this.snakeTwo) {
 							this.balken[1].classList.add('slidefromleft');
 							this.snakeTwo = true;
+                            this.width -= 25;
 						} else {
 							this.balken[1].classList.remove('slidefromleft');
 							this.snakeTwo = false;
+                            this.width += 25;
 						}
 						break;
                     case 98:
@@ -273,9 +275,11 @@ kijs.Class.define('snake.Spielfeld', {
 						if (!this.snakeThree) {
 							this.balken[2].classList.add('slidefromtop');
 							this.snakeThree = true;
+                            this.height -= 25;
 						} else {
 							this.balken[2].classList.remove('slidefromtop');
 							this.snakeThree = false;
+                            this.height += 25;
 						}
 						break;
                     case 73:
@@ -285,9 +289,11 @@ kijs.Class.define('snake.Spielfeld', {
 						if (!this.snakeFour) {
 							this.balken[3].classList.add('slidefromright');
 							this.snakeFour = true;
+                            this.width -= 25;
 						} else {
 							this.balken[3].classList.remove('slidefromright');
 							this.snakeFour = false;
+                            this.width += 25;
 						}
 						break;
                     case 32:

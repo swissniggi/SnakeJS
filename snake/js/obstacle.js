@@ -34,9 +34,18 @@ kijs.Class.define('snake.Obstacle', {
         
         
         // PUBLIC
+        checkCollision: function(snake) {
+            if ((snake.snakeCircles[0].x<=this.x+this.width && snake.snakeCircles[0].x+snake.snakeCircleWidth>=this.x) &&
+                        (snake.snakeCircles[0].y<=this.y+this.height && snake.snakeCircles[0].y+snake.snakeCircleHeight>=this.y)) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        
         paint: function() {
             // Hindernis zeichnen
-            this.context.drawImage(this.image, this.x, this.y, this.width, this.height);            
+            this.context.drawImage(this.image, this.x, this.y, this.width, this.height);
         },
         
         setCoordinates: function() {
