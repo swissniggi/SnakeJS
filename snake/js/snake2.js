@@ -134,7 +134,7 @@ kijs.Class.define('snake.Snake', {
             // Kollision mit anderen Schlangen
             kijs.Array.each(this.spielfeld.snakes, function(snake) {
                 if (snake !== this && !snake.isGameOver) {
-                    for (i = 1; i < snake.snakeRectangles.length; i++) {
+                    for (i = 0; i < snake.snakeRectangles.length; i++) {
                         if ((this.snakeCircles[0].x<snake.snakeRectangles[i].x+snake.snakeRectangles[i].width && this.snakeCircles[0].x+snake.snakeCircleWidth>snake.snakeRectangles[i].x) &&
                                 (this.snakeCircles[0].y<snake.snakeRectangles[i].y+snake.snakeRectangles[i].height && this.snakeCircles[0].y+snake.snakeCircleHeight>snake.snakeRectangles[i].y)) {
                             this.gameOver();
@@ -196,43 +196,42 @@ kijs.Class.define('snake.Snake', {
                 this.context.arc(this.snakeCircles[i].x+(this.snakeCircleWidth/2), this.snakeCircles[i].y+(this.snakeCircleHeight/2), this.snakeCircleWidth/2, 0, 2*Math.PI);
                 this.context.fill();
                 
-                var h = 0;
-                var w = 0;
+                var rectHeight = 0;
+                var rectWidth = 0;
                 var supx = 0;
                 var supy = 0;               
 
                 // Rechteck zeichnen, wenn nicht Kopf
                 if (i < this.snakeCircles.length-1) {
                     if (this.snakeCircles[i+1].direction === 'R' || this.snakeCircles[i+1].direction === 'L') {
-                        h = 35;
-                        w = this.snakeCircles[i+1].x - this.snakeCircles[i].x;
+                        rectHeight = 35;
+                        rectWidth = this.snakeCircles[i+1].x - this.snakeCircles[i].x;
                         supx = 17;
                     } else {
-                        w = 35;
-                        h = this.snakeCircles[i+1].y - this.snakeCircles[i].y;
+                        rectWidth = 35;
+                        rectHeight = this.snakeCircles[i+1].y - this.snakeCircles[i].y;
                         supy = 17;
                     }
                     
+                    var rectX = this.snakeCircles[i].x+supx;
+                    var rectY = this.snakeCircles[i].y+supy;
+                    
                     this.context.fillStyle = this.borderColor;
-                    this.context.fillRect(this.snakeCircles[i].x+supx, this.snakeCircles[i].y+supy, w, h);
-                   
-                    
-                    var x = this.snakeCircles[i].x+supx;
-                    var y = this.snakeCircles[i].y+supy;
-                    
-                    if (w < 0) {
-                        w *= -1;
-                        x -= w;
+                    this.context.fillRect(rectX, rectY, rectWidth, rectHeight);
+                     
+                    if (rectWidth < 0) {
+                        rectWidth *= -1;
+                        rectX -= rectWidth;
                     } 
                     
-                    if (h < 0) {
-                        h *= -1;
-                        y -= h;
+                    if (rectHeight < 0) {
+                        rectHeight *= -1;
+                        rectY -= rectHeight;
                     }
                     
-                    this.snakeRectangles[i] = {x:x, y:y, width:w, height:h};
+                    this.snakeRectangles[i] = {x:rectX, y:rectY, width:rectWidth, height:rectHeight};
                     
-                    if (i === this.snakeCircles.length-2 && i > 0 && (w === 0 || h === 0)) {
+                    if (i === this.snakeCircles.length-2 && i > 0 && (rectWidth === 0 || rectHeight === 0)) {
                         this.snakeCircles.splice(this.snakeCircles.length-1, 1);
                     }
                 }                               
