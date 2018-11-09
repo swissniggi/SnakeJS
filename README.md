@@ -17,5 +17,5 @@ _Magic Mode:_ useable in normal and table mode. An automatic snake appeares! It 
 __Snakes:__<br />
 _snake.js/magicsnake.js_: A slim snake with circular bodyparts! Nice looking, however gets slower the more it grows.<br />
 ![Snake](snake1.PNG)<br />
-_snake2.js/magicsnake2.js_: Looks like a moving neonsign. Fatter than his brother but much faster! Way better performance!<br />
+_snake2.js/magicsnake2.js_: Looks like a moving neon sign. Fatter than his brother but much faster! Way better performance!<br />
 ![Snake 2](snake2.PNG)
