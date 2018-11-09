@@ -12,7 +12,7 @@ This application requires the old KIJS framework to run! // Send me a mail for f
 __Modes:__<br />
 _Normal:_ 1 snake, controlled with arrow keys<br />
 _Table:_ 1 - 4 snakes, controlled with joysticks or button (for more information, please send me a mail)<br />
-_Magic Mode:_ useable in normal and table mode. An automatic snake appeares! It can replace obstacles! Kill it or it kills you!
+_Magic Mode:_ useable in normal and table mode. An automatic snake appeares! Kill it or it kills you!
 
 __Snakes:__<br />
 _snake.js/magicsnake.js_: A slim snake with circular bodyparts! Nice looking, however gets slower the more it grows.<br />
