@@ -19,3 +19,5 @@ _snake.js/magicsnake.js_: A slim snake with circular bodyparts! Nice looking, ho
 ![Snake](snake1.PNG)<br />
 _snake2.js/magicsnake2.js_: Looks like a moving neon sign. Fatter than his brother but much faster! Way better performance!<br />
 ![Snake 2](snake2.PNG)
+
+__Either use snake.js/magicsnake.js or snake2.js/magicsnake2.js! Don't mix them! Don't use them together!
