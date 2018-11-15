@@ -101,9 +101,7 @@ kijs.Class.define('snake.Snake', {
 
             // Frucht
             kijs.Array.each(this.spielfeld.fruits, function(fruit) {
-                if ((this.snakeCircles[0].x<=fruit.x+fruit.width && this.snakeCircles[0].x+this.snakeCircleWidth>=fruit.x) &&
-                        (this.snakeCircles[0].y<=fruit.y+fruit.height && this.snakeCircles[0].y+this.snakeCircleHeight>=fruit.y)) {
-                    fruit.replace();
+                if (fruit.checkCollision(this)) {
                     this.score++;
                     this.spielfeld.updateScores();
                     this.waitTurns = 6;
@@ -111,9 +109,8 @@ kijs.Class.define('snake.Snake', {
             }, this);
 
             // Hindernis
-            for (i = 0; i < 8; i++) {
-                if ((this.snakeCircles[0].x<=this.spielfeld.obstacles[i].x+this.spielfeld.obstacles[i].width && this.snakeCircles[0].x+this.snakeCircleWidth>=this.spielfeld.obstacles[i].x) &&
-                        (this.snakeCircles[0].y<=this.spielfeld.obstacles[i].y+this.spielfeld.obstacles[i].height && this.snakeCircles[0].y+this.snakeCircleHeight>=this.spielfeld.obstacles[i].y)) {
+            for (i = 0; i < this.spielfeld.obstacles.length; i++) {
+                if (this.spielfeld.obstacles[i].checkCollision(this)) {
                     this.gameOver();
                     break;
                 }
