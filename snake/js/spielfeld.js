@@ -32,8 +32,10 @@ kijs.Class.define('snake.Spielfeld', {
         height: 0,
         highscore: null,
         isRunning: false,
-        magicMode: false,
-        magicSnake: null,
+        magicSnakeOne: false,
+        magicSnakeTwo: false,
+        magicSnakeThree: false,
+        magicSnakeFour: false,
         maxScore: null,
         msg: null,
         obstacles: null,
@@ -44,6 +46,7 @@ kijs.Class.define('snake.Spielfeld', {
         snakeTwo: false,
         snakeThree: false,
         snakeFour: false,
+        speed: 6,
         spielfeld: null,
         spielfeldwrapper: null,
         width: 0,
@@ -64,8 +67,8 @@ kijs.Class.define('snake.Spielfeld', {
             for (i = 0; i < 4; i++) {
                 var el = document.createElement('section');
                 var ru = document.createElement('div');
-                ru.innerHTML = 'Bewege den Joystick um mitzuspielen<br /><br />Druecke den roten Button fuer den Magic-Modus';
-                ru.innerHTML += '<br /><br />Druecke den Startknopf um das Spiel zu starten';
+                ru.innerHTML = 'Bewege den Joystick nach oben um mitzuspielen<br /><br />Druecke den schwarzen Button fuer einen CPU-Spieler';
+                ru.innerHTML += '<br /><br />Druecke den roten Button um das Spiel zu starten';
                 el.classList.add('balken','punkte'+(i+1));
                 ru.classList.add('balken','rules'+(i+1));
                 this.balken.push(el);
@@ -73,6 +76,7 @@ kijs.Class.define('snake.Spielfeld', {
                 document.body.appendChild(ru);
                 document.body.appendChild(el);
             }
+            this.balken[0].innerHTML = 'Schwierigkeit: mittel';
             this.eventhandler = kijs.createDelegate(this.setPlayers, this);
             window.addEventListener('keydown', this.eventhandler);
         },
@@ -134,7 +138,7 @@ kijs.Class.define('snake.Spielfeld', {
 
             // Hindernisse zeichnen
             kijs.Array.each(this.obstacles, function(obstacle) {
-                obstacle.paint();                
+                obstacle.paint();
             }, this);
             
             // Früchte zeichnen
@@ -162,8 +166,22 @@ kijs.Class.define('snake.Spielfeld', {
         
         prepare: function() {
             // Höhe und Breite des Spielfelds festlegen
-            this.width = this.spielfeldwrapper.offsetWidth + this.width;
-            this.height = this.spielfeldwrapper.offsetHeight + this.height;            
+            this.width = this.spielfeldwrapper.offsetWidth;
+            this.height = this.spielfeldwrapper.offsetHeight;      
+            
+            // Spielfeldgrösse anpassen
+            if (this.snakeOne) {
+                this.height -= 25;
+            }
+            if (this.snakeTwo) {
+                this.width -= 25;
+            }
+            if (this.snakeThree) {
+                this.height -= 25;
+            }
+            if (this.snakeFour) {
+                this.width -= 25;
+            }
 
             var _this = this;
 
@@ -189,23 +207,36 @@ kijs.Class.define('snake.Spielfeld', {
                 this.snakes.push(new snake.Snake(this, 3, this.width-35, this.height/2-17, 'L', '#01DF3A', {U:'l', D:'j', R:'k', L:'i'}));                                
             }
                         
-            var letters = ['U', 'D', 'R', 'L'];
+            if (this.magicSnakeOne) {
+                this.snakes.push(new snake.MagicSnake(this, this.width/4-17, this.height/4*3-17, 'R', '#C0C0C0'));
+            }
             
-            if (this.magicMode) {
-                this.snakes.push(new snake.MagicSnake(this, this.width/2-17, this.height/2-17, letters[Math.round(Math.random() * 3)], '#C0C0C0'));
-            }            
+            if (this.magicSnakeOne) {
+                this.snakes.push(new snake.MagicSnake(this, this.width/4-17, this.height/4-17, 'D', '#8A2BE2'));
+            }
+            
+            if (this.magicSnakeOne) {
+                this.snakes.push(new snake.MagicSnake(this, this.width/4*3-17, this.height/4-17, 'R', '#00FFFF'));
+            }
+            
+            if (this.magicSnakeOne) {
+                this.snakes.push(new snake.MagicSnake(this, this.width/4*3-17, this.height/4*3-17, 'U', '#FF1493'));
+            }
+            
+            kijs.Array.each(this.snakes, function(snake) {
+                snake.speed = this.speed;
+            }, this);
             
             // Hindernisse erstellen
             for (i = 0; i < 8; i++) {
                 var obstacle = new snake.Obstacle(this);
                 this.obstacles.push(obstacle);
                 // Koordinaten des Hindernisses neu berechnen wenn auf anderem Hindernis
-                for (j = 0; j < this.obstacles.length; j++) {
-                    if (obstacle !== this.obstacles[j]) {
-                        while ((obstacle.x<=this.obstacles[j].x+this.obstacles[j].width && obstacle.x+obstacle.width>=this.obstacles[j].x) &&
-                                (obstacle.y<=this.obstacles[j].y+this.obstacles[j].height && obstacle.y+obstacle.height>=this.obstacles[j].y)) {
-                            obstacle.setCoordinates();
-                        }
+                for (j = 0; j < this.obstacles.length-1; j++) {
+                    if ((obstacle.x<=this.obstacles[j].x+this.obstacles[j].width && obstacle.x+obstacle.width>=this.obstacles[j].x) &&
+                            (obstacle.y<=this.obstacles[j].y+this.obstacles[j].height && obstacle.y+obstacle.height>=this.obstacles[j].y)) {
+                        obstacle.setCoordinates();
+                        j = 0;
                     }
                 }
             }
@@ -215,14 +246,15 @@ kijs.Class.define('snake.Spielfeld', {
                 var fruit = new snake.Fruit(this);
                 this.fruits.push(fruit);
                 // Frucht neu platzieren wenn auf Hindernis
-                for (j = 0; j < 8; j++) {
-                    while ((fruit.x<=this.obstacles[j].x+this.obstacles[j].width && fruit.x+fruit.width>=this.obstacles[j].x) &&
+                for (j = 0; j < this.obstacles.length; j++) {
+                    if ((fruit.x<=this.obstacles[j].x+this.obstacles[j].width && fruit.x+fruit.width>=this.obstacles[j].x) &&
                             (fruit.y<=this.obstacles[j].y+this.obstacles[j].height && fruit.y+fruit.height>=this.obstacles[j].y)) {
                         fruit.replace();
+                        j = 0;
                     }
                 }
             }
-
+            
             this.updateScores();
 
             // Loop starten
@@ -236,82 +268,96 @@ kijs.Class.define('snake.Spielfeld', {
         },
         
         setPlayers: function(e) {
+            var difficulty = '';
+            
 			if (!e.repeat) {
 				switch (e.keyCode) {
                     case 37:
-                    case 38:
-                    case 39:
-                    case 40:
-                        if (!this.snakeOne) {
-                            this.balken[0].classList.add('slidefrombottom');
-                            this.balken[3].classList.add('redSnakeVisible');
-                            this.snakeOne = true;
-                            this.height -= 25;
-                        } else {
-                            this.balken[0].classList.remove('slidefrombottom');
-                            this.balken[3].classList.remove('redSnakeVisible');
-                            this.snakeOne = false;
-                            this.height += 25;
+                        // Schwierigkeit runter
+                        if (this.speed > 3) {
+                            this.speed -= 3;
+                        }                                     
+                        switch (this.speed) {
+                            case 3: difficulty = 'leicht'; break;
+                            case 6: difficulty = 'mittel'; break;
                         }
+                        this.balken[0].innerHTML = 'Schwierigkeit: ' + difficulty;
                         break;
-                    case 65:
-					case 68:
+                    case 38:
+                        // roter Balken aktivieren
+                        this.balken[0].classList.add('slidefrombottom');
+                        this.balken[3].classList.add('redSnakeVisible');
+                        this.snakeOne = true;
+                        break;
+                    case 39:
+                        // Schwierigkeit hoch
+                        if (this.speed < 9) {
+                            this.speed += 3;
+                        }
+                        switch (this.speed) {
+                            case 6: difficulty = 'mittel'; break;
+                            case 9: difficulty = 'schwer'; break;
+                        }
+                        this.balken[0].innerHTML = 'Schwierigkeit: ' + difficulty;
+                        break;
+                    case 40:
+                        // roter Balken deaktivieren
+                        this.balken[0].classList.remove('slidefrombottom');
+                        this.balken[3].classList.remove('redSnakeVisible');
+                        this.snakeOne = false;
+                        break;
                     case 83:
+                        // gelber Balken aktivieren
+                        this.balken[1].classList.remove('slidefromleft');
+                        this.snakeTwo = false;
+                        break;
                     case 87:
-						if (!this.snakeTwo) {
-							this.balken[1].classList.add('slidefromleft');
-							this.snakeTwo = true;
-                            this.width -= 25;
-						} else {
-							this.balken[1].classList.remove('slidefromleft');
-							this.snakeTwo = false;
-                            this.width += 25;
-						}
+                        // gelber Balken deaktivieren
+                        this.balken[1].classList.add('slidefromleft');
+                        this.snakeTwo = true;;
 						break;
                     case 98:
-                    case 100:
-					case 102:
+                        // blauer Balken aktivieren
+                        this.balken[2].classList.remove('slidefromtop');
+                        this.snakeThree = false;
+                        break;
                     case 104:
-						if (!this.snakeThree) {
-							this.balken[2].classList.add('slidefromtop');
-							this.snakeThree = true;
-                            this.height -= 25;
-						} else {
-							this.balken[2].classList.remove('slidefromtop');
-							this.snakeThree = false;
-                            this.height += 25;
-						}
+                        // blauer Balken deaktivieren
+                        this.balken[2].classList.add('slidefromtop');
+                        this.snakeThree = true;
 						break;
                     case 73:
-                    case 74:
-                    case 75:
-					case 76:
-						if (!this.snakeFour) {
-							this.balken[3].classList.add('slidefromright');
-							this.snakeFour = true;
-                            this.width -= 25;
-						} else {
-							this.balken[3].classList.remove('slidefromright');
-							this.snakeFour = false;
-                            this.width += 25;
-						}
-						break;
-                    case 32:
-                        this.magicMode = true;
+                        // grüner Balken aktivieren
+                        this.balken[3].classList.add('slidefromright');
+                        this.snakeFour = true;
                         break;
-					case 13:
-                        if (this.snakeOne || this.snakeTwo || this.snakeThree || this.snakeFour) {
+                    case 75:
+                        // grüner Balken deaktivieren
+                        this.balken[3].classList.remove('slidefromright');
+                        this.snakeFour = false;
+                        break;
+                    case 81:
+                        this.magicSnakeOne = true;
+                        break;
+                    case 88:
+                        this.magicSnakeTwo = true;
+                        break;
+                    case 89:
+                        this.magicSnakeThree = true;
+                        break;
+                    case 90:
+                        this.magicSnakeFour = true;
+                        break;
+		    case 13:
+                        if (this.snakeOne) {
                             for (i = 0; i < this.rules.length; i++) {
                                 document.body.removeChild(this.rules[i]);
                             }
                             window.removeEventListener('keydown', this.eventhandler);
                             this.prepare();
                         }
-						break;
-                    case 19:
-                        window.location.replace("../index.html");
-                        break;
-				}
+			break;
+		}                
 			}
         },
         
