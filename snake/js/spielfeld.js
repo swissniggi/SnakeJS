@@ -192,19 +192,19 @@ kijs.Class.define('snake.Spielfeld', {
             // Snakes erstellen
              if (this.snakeOne) {
                 this.spielfeldwrapper.style.marginBottom = "25px";
-                this.snakes.push(new snake.Snake(this, 0, this.width/2-17, this.height-35, 'U', '#FF0000', {R:'ArrowRight', L:'ArrowLeft', D:'ArrowDown', U:'ArrowUp'}));                               
+                this.snakes.push(new snake.Snake(this, 0, this.width/2-17, this.height-35, 'U', '#FF0000', {R:'ArrowRight', L:'ArrowLeft', D:'ArrowDown', U:'ArrowUp', Enter:'q'}));                               
             }
             if (this.snakeTwo) {
                 this.spielfeldwrapper.style.marginLeft = "25px";
-                this.snakes.push(new snake.Snake(this, 1, 35, this.height/2-17, 'R', '#FFE000', {D:'d', U:'a', L:'s', R:'w'}));                                
+                this.snakes.push(new snake.Snake(this, 1, 35, this.height/2-17, 'R', '#FFE000', {D:'d', U:'a', L:'s', R:'w', Enter:'x'}));                                
             }
             if (this.snakeThree) {
                 this.spielfeldwrapper.style.marginTop = "25px";
-                this.snakes.push(new snake.Snake(this, 2, this.width/2-17, 35, 'D', '#0080FF', {L:'6', R:'4', U:'2', D:'8'}));                               
+                this.snakes.push(new snake.Snake(this, 2, this.width/2-17, 35, 'D', '#0080FF', {L:'6', R:'4', U:'2', D:'8', Enter:'y'}));                               
             }
             if (this.snakeFour) {
                 this.spielfeldwrapper.style.marginRight = "25px";
-                this.snakes.push(new snake.Snake(this, 3, this.width-35, this.height/2-17, 'L', '#01DF3A', {U:'l', D:'j', R:'k', L:'i'}));                                
+                this.snakes.push(new snake.Snake(this, 3, this.width-35, this.height/2-17, 'L', '#01DF3A', {U:'l', D:'j', R:'k', L:'i', Enter:'z'}));                                
             }
                         
             if (this.magicSnakeOne) {
