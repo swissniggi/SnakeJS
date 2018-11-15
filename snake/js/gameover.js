@@ -103,18 +103,14 @@ kijs.Class.define('snake.GameOver', {
             // 'Kärtchen' mit Game-Over-Nachricht erstellen
             for (i = 0; i < this.snakes.length; i++) {
                 if (this.snakes[i].basename === 'Snake') {
-                    this.spielfeld.rules[this.snakes[i].no].innerHTML = this.msg;                
+                    this.spielfeld.rules[this.snakes[i].no].innerHTML = this.msg;
                     document.body.appendChild(this.spielfeld.rules[this.snakes[i].no]);
                 }
             }
             // Button zum Starten eines neuen Spiels erstellen wenn kein neuer Highscore
             if (!isNewScore) {
                 var button = document.createElement('button');
-                if (this.snakes[0].no % 2 === 0) {
-                    button.classList.add('buttonNewGameHorizontal');
-                } else {
-                    button.classList.add('buttonNewGameVertical');
-                }
+                button.classList.add('buttonNewGameHorizontal');
                 if (!!window.chrome && !!window.chrome.webstore) {
                     button.innerHTML = '<p>Neues Spiel starten</p>';
                     /* writing-mode kann im Chrome/Chromium nicht auf Buttons angewendet werden.
@@ -125,7 +121,7 @@ kijs.Class.define('snake.GameOver', {
                 }
                 this.eventhandler = kijs.createDelegate(this.newGameOK, this);
                 button.addEventListener('click', this.eventhandler);
-                this.spielfeld.rules[this.snakes[0].no].appendChild(button);
+                this.spielfeld.rules[0].appendChild(button);
                 button.focus();
             }
             this.playGameOverSound(isNewScore);
@@ -142,13 +138,8 @@ kijs.Class.define('snake.GameOver', {
             var buttonYes = document.createElement('button');
             var buttonNo = document.createElement('button');
 
-            if (this.snakes[0].no % 2 === 0) {
-                buttonYes.classList.add('buttonNewGameHorizontal');
-                buttonNo.classList.add('buttonNewGameHorizontal');
-            } else {
-                buttonYes.classList.add('buttonNewGameVertical');
-                buttonNo.classList.add('buttonNewGameVertical');
-            }
+            buttonYes.classList.add('buttonNewGameHorizontal');
+            buttonNo.classList.add('buttonNewGameHorizontal');
             buttonYes.classList.add('buttonPause');
             buttonYes.setAttribute('id', 'yes');
             buttonNo.classList.add('buttonPause');
