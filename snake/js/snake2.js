@@ -107,7 +107,6 @@ kijs.Class.define('snake.Snake', {
                     this.score++;
                     this.spielfeld.updateScores();
                     this.waitTurns = 18;
-                    return false;
                 }
             }, this);
 
@@ -281,10 +280,10 @@ kijs.Class.define('snake.Snake', {
             if (this.snakeCircles[0].x === null) {
                 this.snakeCircles[0] = {x:this.x, y:this.y, direction:this.direction};
                 switch (this.direction) {
-                    case 'R': this.snakeCircles[1] = {x:this.x-72, y:this.y, direction:this.direction}; break;
-                    case 'L': this.snakeCircles[1] = {x:this.x+72, y:this.y, direction:this.direction}; break;
-                    case 'U': this.snakeCircles[1] = {x:this.x, y:this.y+72, direction:this.direction}; break;
-                    case 'D': this.snakeCircles[1] = {x:this.x, y:this.y-72, direction:this.direction}; break;
+                    case 'R': this.snakeCircles[1] = {x:this.x-(12*this.speed), y:this.y, direction:this.direction}; break;
+                    case 'L': this.snakeCircles[1] = {x:this.x+(12*this.speed), y:this.y, direction:this.direction}; break;
+                    case 'U': this.snakeCircles[1] = {x:this.x, y:this.y+(12*this.speed), direction:this.direction}; break;
+                    case 'D': this.snakeCircles[1] = {x:this.x, y:this.y-(12*this.speed), direction:this.direction}; break;
                 }
             }
             this.directions[0] = this.direction;
