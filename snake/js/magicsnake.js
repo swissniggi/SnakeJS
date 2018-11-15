@@ -117,17 +117,6 @@ kijs.Class.define('snake.MagicSnake', {
                 }
             }
 
-            // Kollision mit sich selber
-            if (this.snakeCircles.length > 2) {
-                for (i = 2; i < this.snakeRectangles.length; i++) {
-                    if (this.snakeCircles[0].x<=this.snakeRectangles[i].x+this.snakeRectangles[i].width && this.snakeCircles[0].x+this.snakeCircleWidth>=this.snakeRectangles[i].x &&
-                            this.snakeCircles[0].y<=this.snakeRectangles[i].y+this.snakeRectangles[i].height && this.snakeCircles[0].y+this.snakeCircleHeight>=this.snakeRectangles[i].y) {
-                        this.gameOver();
-                        break;
-                    }
-                }
-            }
-            
             // Kollision mit anderen Schlangen
             kijs.Array.each(this.spielfeld.snakes, function(snake) {
                 if (snake !== this && !snake.isGameOver) {
