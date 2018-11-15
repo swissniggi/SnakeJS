@@ -106,7 +106,7 @@ kijs.Class.define('snake.Snake', {
                     fruit.replace();
                     this.score++;
                     this.spielfeld.updateScores();
-                    this.waitTurns = 18;
+                    this.waitTurns = 6;
                 }
             }, this);
 
