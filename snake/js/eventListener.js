@@ -17,24 +17,21 @@ snake.EventListener = class snake_EventListener {
             'd' : 'D',
             'a' : 'U',
             's' : 'L',
-            'w' : 'R',
-            'Shift' : 'Pause'
+            'w' : 'R'
         };
         
         this.stickBlueKeys = {
             '6' : 'L',
             '4' : 'R',
             '2' : 'U',
-            '8' : 'D',
-            'Shift' : 'Pause'
+            '8' : 'D''
         };
         
         this.stickGreenKeys = {
             'l' : 'U',
             'j' : 'D',
             'k' : 'R',
-            'i' : 'L',
-            'Shift' : 'Pause'
+            'i' : 'L'
         };
     }
     
