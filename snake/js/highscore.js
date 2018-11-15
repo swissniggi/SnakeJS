@@ -175,7 +175,7 @@ kijs.Class.define('snake.Highscore', {
 					case this.keys.D:
 						this.displayChar(false);
 						break;
-					case 'Enter':
+					case this.keys.Enter:
 						if (this.frames[1].charframe.innerHTML !== '') {
                             document.body.removeEventListener('keydown', kijs.createDelegate(this.inputChar, this));
                             this.saveScore();
