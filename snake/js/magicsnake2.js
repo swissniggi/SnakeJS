@@ -88,8 +88,7 @@ kijs.Class.define('snake.MagicSnake', {
                 if ((this.snakeCircles[0].x<=fruit.x+fruit.width && this.snakeCircles[0].x+this.snakeCircleWidth>=fruit.x) &&
                         (this.snakeCircles[0].y<=fruit.y+fruit.height && this.snakeCircles[0].y+this.snakeCircleHeight>=fruit.y)) {
                     fruit.replace();
-                    this.waitTurns = 12;
-                    return false;
+                    this.waitTurns = 6;
                 }
             }, this);
 
@@ -336,10 +335,10 @@ kijs.Class.define('snake.MagicSnake', {
             if (this.snakeCircles[0].x === null) {
                 this.snakeCircles[0] = {x:this.x, y:this.y, direction:this.direction};
                 switch (this.direction) {
-                    case 'R': this.snakeCircles[1] = {x:this.x-72, y:this.y, direction:this.direction}; break;
-                    case 'L': this.snakeCircles[1] = {x:this.x+72, y:this.y, direction:this.direction}; break;
-                    case 'U': this.snakeCircles[1] = {x:this.x, y:this.y+72, direction:this.direction}; break;
-                    case 'D': this.snakeCircles[1] = {x:this.x, y:this.y-72, direction:this.direction}; break;
+                    case 'R': this.snakeCircles[1] = {x:this.x-(12*this.speed), y:this.y, direction:this.direction}; break;
+                    case 'L': this.snakeCircles[1] = {x:this.x+(12*this.speed), y:this.y, direction:this.direction}; break;
+                    case 'U': this.snakeCircles[1] = {x:this.x, y:this.y+(12*this.speed), direction:this.direction}; break;
+                    case 'D': this.snakeCircles[1] = {x:this.x, y:this.y-(12*this.speed), direction:this.direction}; break;
                 }
                 this.lastTime = (new Date()).getTime();
             }
