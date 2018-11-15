@@ -15,4 +15,4 @@ _Table:_ 1 - 4 snakes, controlled with joysticks or button (for more information
 
 For additional fun, add up to four cpu-controlled snakes!!
 
-_(the original snake (build up from circles) is no longer compatible with the rest of the game. Therefore all relating code has been deleted)_
+_(The original snake (build up from circles) is no longer compatible with the rest of the game. Therefore all relating code has been deleted)_
