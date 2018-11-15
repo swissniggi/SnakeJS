@@ -9,7 +9,7 @@ snake.EventListener = class snake_EventListener {
             'ArrowRight' : 'R',
             'ArrowLeft' : 'L',
             'ArrowDown' : 'D',
-            'ArrowUp' : 'U',
+            'ArrowUp' : 'U',            
             'Shift' : 'Pause'
         };
         
@@ -24,7 +24,7 @@ snake.EventListener = class snake_EventListener {
             '6' : 'L',
             '4' : 'R',
             '2' : 'U',
-            '8' : 'D''
+            '8' : 'D'
         };
         
         this.stickGreenKeys = {
@@ -36,7 +36,7 @@ snake.EventListener = class snake_EventListener {
     }
     
     _onSnakeKeyDown(e) {
-        
+
         if (this.stickRedKeys.hasOwnProperty(e.key)) {
             this.dispatchStickRedEvent(e.key);
         }
