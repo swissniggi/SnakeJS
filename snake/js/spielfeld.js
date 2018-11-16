@@ -150,7 +150,7 @@ kijs.Class.define('snake.Spielfeld', {
             var length = -1;
             kijs.Array.each(this.snakes, function(snake) {
                 snake.paint();
-                if (!snake.isGameOver && snake.score > length) {
+                if (this.isRunning && !snake.isGameOver && snake.score > length) {
                     length = snake.score;
                     this.longestSnake = snake;
                 }
