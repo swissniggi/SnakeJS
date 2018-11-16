@@ -241,7 +241,7 @@ kijs.Class.define('snake.Spielfeld', {
                 this.obstacles.push(obstacle);
                 // Koordinaten des Hindernisses neu berechnen wenn auf anderem Hindernis
                 for (j = 0; j < this.obstacles.length; j++) {
-                    if ((obstacle.x<=this.obstacles[j].x+this.obstacles[j].width && obstacle.x+obstacle.width>=this.obstacles[j].x) &&
+                    if (obstacle !== this.obstacle[j] && (obstacle.x<=this.obstacles[j].x+this.obstacles[j].width && obstacle.x+obstacle.width>=this.obstacles[j].x) &&
                             (obstacle.y<=this.obstacles[j].y+this.obstacles[j].height && obstacle.y+obstacle.height>=this.obstacles[j].y)) {
                         obstacle.replace();
                         j = 0;
