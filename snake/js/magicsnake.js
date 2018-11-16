@@ -310,7 +310,7 @@ kijs.Class.define('snake.MagicSnake', {
             var now = (new Date()).getTime();
             
             if (now % 7 === 0 && now - this.lastTime > 2000 && !this.onObstacle) {
-                if (Math.round(Math.random()) === 0 || this.onBorder) {
+                if (Math.round(Math.random() * 2) > 1 || this.onBorder) {
                     if (this.direction === 'R') {
                         this.changeDirection('U');
                     } else if (this.direction === 'L') {
