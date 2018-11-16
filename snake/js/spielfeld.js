@@ -200,7 +200,7 @@ kijs.Class.define('snake.Spielfeld', {
 
             var _this = this;
 
-            window.addEventListener('keydown', function(e) {
+             window.addEventListener('keydown', function(e) {
                 _this.raiseEvent('keydown', e);
             }, false);
 
