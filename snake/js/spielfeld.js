@@ -242,7 +242,7 @@ kijs.Class.define('snake.Spielfeld', {
                 snake.speed = this.speed;
             }, this);
 		
-	    window.localStorage.setItem('speed', this.speed);
+	     window.localStorage.setItem('speed', this.speed);
             
             // Hindernisse erstellen
             for (i = 0; i < 8; i++) {
