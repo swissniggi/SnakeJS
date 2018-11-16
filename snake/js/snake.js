@@ -23,8 +23,12 @@ kijs.Class.define('snake.Snake', {
         this.direction = direction;
         this.controlKeys = controlKeys;
         this.snakeCircles = [];
+        this.snakeCircleHeight = 35;
+        this.snakeCircleWidth = 35;        
         this.snakeRectangles = [];
         this.directions = [this.direction];
+        this.crashmusic = new Audio('../sounds/crash.mp3');
+        this.uauamsic = new Audio('../sounds/uaua.mp3');
 
         this.snakeCircles.push({x:this.initX, y:this.initY, direction:this.direction});
 
@@ -60,12 +64,14 @@ kijs.Class.define('snake.Snake', {
         isGameOver: false,
         lastTime: (new Date()).getTime(),
         newColor: null,
+        crashMusic: null,
+        uauaMusic: null,
         no: null,
         score: 0,
         snakeCircles: null,
         snakeRectangles: null,
-        snakeCircleHeight: 35,
-        snakeCircleWidth: 35,
+        snakeCircleHeight: 0,
+        snakeCircleWidth: 0,
         speed: 6,
         spielfeld: null,
         waitTurns: 0,
@@ -97,12 +103,12 @@ kijs.Class.define('snake.Snake', {
             if (this.snakeCircles[0].x <= 0 || this.snakeCircles[0].x+this.snakeCircleWidth >= this.spielfeld.width ||
                     this.snakeCircles[0].y <= 0 || this.snakeCircles[0].y+this.snakeCircleHeight >= this.spielfeld.height) {
                 this.gameOver();
-		this.playSounds();
+                this.playSounds();
             }
 
             // Frucht
             kijs.Array.each(this.spielfeld.fruits, function(fruit) {
-                if (fruit.checkCollision(this)) {
+                if (fruit.checkCollision(this)) {                   
                     this.score++;
                     this.spielfeld.updateScores();
                     this.waitTurns = 6;
@@ -113,7 +119,7 @@ kijs.Class.define('snake.Snake', {
             for (i = 0; i < this.spielfeld.obstacles.length; i++) {
                 if (this.spielfeld.obstacles[i].checkCollision(this)) {
                     this.gameOver();
-		    this.playSounds();
+                    this.playSounds();
                     break;
                 }
             }
@@ -124,7 +130,7 @@ kijs.Class.define('snake.Snake', {
                     if ((this.snakeCircles[0].x<=this.snakeRectangles[i].x+this.snakeRectangles[i].width && this.snakeCircles[0].x+this.snakeCircleWidth>=this.snakeRectangles[i].x) &&
                             (this.snakeCircles[0].y<=this.snakeRectangles[i].y+this.snakeRectangles[i].height && this.snakeCircles[0].y+this.snakeCircleHeight>=this.snakeRectangles[i].y)) {
                         this.gameOver();
-		        this.playSounds();
+                        this.playSounds();
                         break;
                     }
                 }
@@ -137,7 +143,7 @@ kijs.Class.define('snake.Snake', {
                         if ((this.snakeCircles[0].x<snake.snakeRectangles[i].x+snake.snakeRectangles[i].width && this.snakeCircles[0].x+snake.snakeCircleWidth>snake.snakeRectangles[i].x) &&
                                 (this.snakeCircles[0].y<snake.snakeRectangles[i].y+snake.snakeRectangles[i].height && this.snakeCircles[0].y+snake.snakeCircleHeight>snake.snakeRectangles[i].y)) {
                             this.gameOver();
-			    this.playSounds();
+                            this.playSounds();
                             break;
                         }
                     }
@@ -169,6 +175,10 @@ kijs.Class.define('snake.Snake', {
             this.setSnake();
             
             this.snakeRectangles = [];
+            
+            if (this.waitTurns > 0) {
+                this.waitTurns--;
+            }
 
             // Snake zeichnen            
             for (i = this.snakeCircles.length-1; i >= 0; i--) {
@@ -184,11 +194,7 @@ kijs.Class.define('snake.Snake', {
                         case 'D': this.snakeCircles[i].y += this.speed;
                                   break;
                     }
-                }
-                
-                if (this.waitTurns > 0) {
-                    this.waitTurns--;
-                }
+                }                               
                 
                 // Kreis zeichnen
                 this.context.fillStyle = this.borderColor;
@@ -275,8 +281,8 @@ kijs.Class.define('snake.Snake', {
             // Kollisionserkennung
             this.checkCollision();
         },
-	    
-	paintCrown() {
+        
+        paintCrown() {
             var x = 0, y = 0;
             var img = new Image();
             switch(this.direction) {
@@ -295,12 +301,10 @@ kijs.Class.define('snake.Snake', {
             }
             this.context.drawImage(img, this.snakeCircles[0].x+x, this.snakeCircles[0].y+y, this.snakeCircleWidth, this.snakeCircleHeight);
         },
-	    
-	playSounds() {
-            var crash = new Audio('../sounds/crash.mp3');
-            var uaua = new Audio('../sounds/uaua.mp3');
-            crash.play();
-            uaua.play();
+        
+        playSounds() {
+            this.crashmusic.play();
+            this.uauamusic.play();
         },
         
         setSnake() {
