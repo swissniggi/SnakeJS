@@ -3,7 +3,7 @@
 // --------------------------------------------------------------
 // snake.Snake
 // --------------------------------------------------------------
-kijs.Class.define('snake.MagicSnake', {
+kijs.Class.define('snake.Snake', {
     type: 'regular',     // regular, abstract, static oder singleton (default:regular)
     xtypes: [],          // Alternative Klassennamen zur Verwendung als xtype in Config-Objekten
     events: [],          // Namen der Events dieser Klasse
@@ -11,22 +11,39 @@ kijs.Class.define('snake.MagicSnake', {
     // --------------------------------------------------------------
     // CONSTRUCTOR
     // --------------------------------------------------------------
-    construct: function(spielfeld, x, y, direction, borderColor) {
+    construct: function(spielfeld, no, x, y, direction, borderColor, controlKeys) {
         this.base(arguments);
         this.spielfeld = spielfeld;
+        this.no = no;
         this.borderColor = borderColor;
         this.dom = spielfeld.spielfeld;
         this.context = this.dom.getContext('2d');
         this.x = x;
         this.y = y;
         this.direction = direction;
+        this.controlKeys = controlKeys;
         this.snakeCircles = [];
         this.snakeCircleHeight = 35;
-        this.snakeCircleWidth = 35;
+        this.snakeCircleWidth = 35;        
         this.snakeRectangles = [];
         this.directions = [this.direction];
+        this.crashmusic = new Audio('../sounds/crash.mp3');
+        this.uauamsic = new Audio('../sounds/uaua.mp3');
 
         this.snakeCircles.push({x:this.initX, y:this.initY, direction:this.direction});
+
+        var color = '';
+        
+        switch(this.no) {
+            case 0: color = 'Red'; break;
+            case 1: color = 'Yellow'; break;
+            case 2: color = 'Blue'; break;
+            case 3: color = 'Green'; break;
+        }
+
+        var el = new snake.EventListener();
+        this.spielfeld.on('keydown', el._onSnakeKeyDown, el);
+        window.addEventListener('stick'+color, this._onStickEvent.bind(this), true);
         
         this.calculateColor();
     },
@@ -38,6 +55,7 @@ kijs.Class.define('snake.MagicSnake', {
         border: 8,
         borderColor: null,
         context: null,
+        controlKeys: null,
         currentTime: null,
         direction: null,
         directions: null,
@@ -46,8 +64,10 @@ kijs.Class.define('snake.MagicSnake', {
         isGameOver: false,
         lastTime: (new Date()).getTime(),
         newColor: null,
-        obstacleTouched: null,
-        onBorder: false,
+        crashMusic: null,
+        uauaMusic: null,
+        no: null,
+        score: 0,
         snakeCircles: null,
         snakeRectangles: null,
         snakeCircleHeight: 0,
@@ -78,13 +98,14 @@ kijs.Class.define('snake.MagicSnake', {
             this.newColor = '#' + newR + newG + newB;
         },
         
-        changeDirection: function(dir) {
-            this.direction = dir;
-            this.snakeCircles.unshift({x:this.snakeCircles[0].x, y:this.snakeCircles[0].y, direction:this.direction});
-            this.snakeCircles[1].direction = this.direction;
-        },
-        
         checkCollision() {
+            // Ausserhalb des Spielfelds
+            if (this.snakeCircles[0].x <= 0 || this.snakeCircles[0].x+this.snakeCircleWidth >= this.spielfeld.width ||
+                    this.snakeCircles[0].y <= 0 || this.snakeCircles[0].y+this.snakeCircleHeight >= this.spielfeld.height) {
+                this.gameOver();
+                this.playSounds();
+            }
+
             // Frucht
             kijs.Array.each(this.spielfeld.fruits, function(fruit) {
                 if (fruit.checkCollision(this)) {                   
@@ -97,59 +118,37 @@ kijs.Class.define('snake.MagicSnake', {
             // Hindernis
             for (i = 0; i < this.spielfeld.obstacles.length; i++) {
                 if (this.spielfeld.obstacles[i].checkCollision(this)) {
-                    if (this.spielfeld.obstacles[i] !== this.obstacleTouched) {
-                        this.lastTime = (new Date()).getTime();
-                        this.obstacleTouched = this.spielfeld.obstacles[i];
-                        
-                        if (this.direction === 'R') {
-                            this.changeDirection('U');
-                        } else if (this.direction === 'L') {
-                            this.changeDirection('D');
-                        } else if (this.direction === 'U') {
-                            this.changeDirection('L');
-                        } else if (this.direction === 'D') {
-                            this.changeDirection('R');
-                        }
-                    }
+                    this.gameOver();
+                    this.playSounds();
                     break;
-                } else if (i === 7) {
-                    this.obstacleTouched = null;
                 }
             }
 
+            // Kollision mit sich selber
+            if (this.snakeCircles.length > 2) {
+                for (i = 2; i < this.snakeRectangles.length; i++) {
+                    if ((this.snakeCircles[0].x<=this.snakeRectangles[i].x+this.snakeRectangles[i].width && this.snakeCircles[0].x+this.snakeCircleWidth>=this.snakeRectangles[i].x) &&
+                            (this.snakeCircles[0].y<=this.snakeRectangles[i].y+this.snakeRectangles[i].height && this.snakeCircles[0].y+this.snakeCircleHeight>=this.snakeRectangles[i].y)) {
+                        this.gameOver();
+                        this.playSounds();
+                        break;
+                    }
+                }
+            }
+            
             // Kollision mit anderen Schlangen
             kijs.Array.each(this.spielfeld.snakes, function(snake) {
                 if (snake !== this && !snake.isGameOver) {
                     for (i = 0; i < snake.snakeRectangles.length; i++) {
-                        if (this.snakeCircles[0].x<snake.snakeRectangles[i].x+snake.snakeRectangles[i].width && this.snakeCircles[0].x+snake.snakeCircleWidth>snake.snakeRectangles[i].x &&
-                                this.snakeCircles[0].y<snake.snakeRectangles[i].y+snake.snakeRectangles[i].height && this.snakeCircles[0].y+snake.snakeCircleHeight>snake.snakeRectangles[i].y) {
+                        if ((this.snakeCircles[0].x<snake.snakeRectangles[i].x+snake.snakeRectangles[i].width && this.snakeCircles[0].x+snake.snakeCircleWidth>snake.snakeRectangles[i].x) &&
+                                (this.snakeCircles[0].y<snake.snakeRectangles[i].y+snake.snakeRectangles[i].height && this.snakeCircles[0].y+snake.snakeCircleHeight>snake.snakeRectangles[i].y)) {
                             this.gameOver();
-			    this.playSounds();
+                            this.playSounds();
                             break;
                         }
                     }
                 }
             }, this);
-        },
-        
-        checkPosition: function() {
-            if (this.direction === 'R' && this.spielfeld.width - this.snakeCircles[0].x < 50) {
-                this.changeDirection('U');
-                this.lastTime = (new Date()).getTime();
-                this.onBorder = true;
-            } else if (this.direction === 'U' && this.snakeCircles[0].y < 15) {
-                this.changeDirection('L');
-                this.lastTime = (new Date()).getTime();
-                this.onBorder = true;
-            } else if (this.direction === 'L' && this.snakeCircles[0].x < 15) {
-                this.changeDirection('D');
-                this.lastTime = (new Date()).getTime();
-                this.onBorder = true;
-            } else if (this.direction === 'D' && this.spielfeld.height - this.snakeCircles[0].y < 50) {
-                this.changeDirection('R');
-                this.lastTime = (new Date()).getTime();
-                this.onBorder = true;
-            }
         },
         
         gameOver: function() {
@@ -183,7 +182,7 @@ kijs.Class.define('snake.MagicSnake', {
 
             // Snake zeichnen            
             for (i = this.snakeCircles.length-1; i >= 0; i--) {
-                               
+                                
                 if (i === 0 || (i === this.snakeCircles.length-1 && this.waitTurns === 0)) {
                     switch (this.snakeCircles[i].direction) {
                         case 'R': this.snakeCircles[i].x += this.speed;
@@ -195,7 +194,7 @@ kijs.Class.define('snake.MagicSnake', {
                         case 'D': this.snakeCircles[i].y += this.speed;
                                   break;
                     }
-                }                                
+                }                               
                 
                 // Kreis zeichnen
                 this.context.fillStyle = this.borderColor;
@@ -281,13 +280,9 @@ kijs.Class.define('snake.MagicSnake', {
 
             // Kollisionserkennung
             this.checkCollision();
-            
-            this.checkPosition();
-            // Zufälligen Richtungswechsel kalkulieren
-            this.randomTurn();
         },
-	    
-	paintCrown() {
+        
+        paintCrown() {
             var x = 0, y = 0;
             var img = new Image();
             switch(this.direction) {
@@ -306,42 +301,10 @@ kijs.Class.define('snake.MagicSnake', {
             }
             this.context.drawImage(img, this.snakeCircles[0].x+x, this.snakeCircles[0].y+y, this.snakeCircleWidth, this.snakeCircleHeight);
         },
-	    
-	playSounds() {
-            var crash = new Audio('../sounds/crash.mp3');
-            var uaua = new Audio('../sounds/uaua.mp3');
-            crash.play();
-            uaua.play();
-        },
         
-        randomTurn: function() {
-            var now = (new Date()).getTime();
-            
-            if (now % 7 === 0 && now - this.lastTime > 2000 && !this.onObstacle) {
-                if (Math.round(Math.random() * 2) > 1 || this.onBorder) {
-                    if (this.direction === 'R') {
-                        this.changeDirection('U');
-                    } else if (this.direction === 'L') {
-                        this.changeDirection('D');
-                    } else if (this.direction === 'U') {
-                        this.changeDirection('L');
-                    } else if (this.direction === 'D') {
-                        this.changeDirection('R');
-                    }
-                } else {
-                    if (this.direction === 'R') {
-                        this.changeDirection('D');
-                    } else if (this.direction === 'L') {
-                        this.changeDirection('U');
-                    } else if (this.direction === 'U') {
-                        this.changeDirection('R');
-                    } else if (this.direction === 'D') {
-                        this.changeDirection('L');
-                    }
-                }
-                this.onBorder = false;
-                this.lastTime = now;
-            }
+        playSounds() {
+            this.crashmusic.play();
+            this.uauamusic.play();
         },
         
         setSnake() {
@@ -349,15 +312,48 @@ kijs.Class.define('snake.MagicSnake', {
             if (this.snakeCircles[0].x === null) {
                 this.snakeCircles[0] = {x:this.x, y:this.y, direction:this.direction};
                 switch (this.direction) {
-                    case 'R': this.snakeCircles[1] = {x:this.x-72, y:this.y, direction:this.direction}; break;
-                    case 'L': this.snakeCircles[1] = {x:this.x+72, y:this.y, direction:this.direction}; break;
-                    case 'U': this.snakeCircles[1] = {x:this.x, y:this.y+72, direction:this.direction}; break;
-                    case 'D': this.snakeCircles[1] = {x:this.x, y:this.y-72, direction:this.direction}; break;
+                    case 'R': this.snakeCircles[1] = {x:this.x-(12*this.speed), y:this.y, direction:this.direction}; break;
+                    case 'L': this.snakeCircles[1] = {x:this.x+(12*this.speed), y:this.y, direction:this.direction}; break;
+                    case 'U': this.snakeCircles[1] = {x:this.x, y:this.y+(12*this.speed), direction:this.direction}; break;
+                    case 'D': this.snakeCircles[1] = {x:this.x, y:this.y-(12*this.speed), direction:this.direction}; break;
                 }
-                this.lastTime = (new Date()).getTime();
             }
             this.directions[0] = this.direction;
-        }
+        },
+
+        // EVENTS
+        //--------
+        _onStickEvent: function(e) {
+            this.currentTime = (new Date()).getTime();
+
+            if (this.currentTime - this.lastTime > 25) {
+                if (this.spielfeld.isRunning) {
+                    // gedrückte Taste ermitteln
+                    if (e.detail === 'L' && ['R', 'L'].indexOf(this.direction) === -1) {
+                        this.direction = 'L';
+                        this.snakeCircles.unshift({x:this.snakeCircles[0].x, y:this.snakeCircles[0].y, direction:this.direction});
+                        this.snakeCircles[1].direction = this.direction;
+                    } else if (e.detail === 'R' && ['R', 'L'].indexOf(this.direction) === -1) {
+                        this.direction = 'R';
+                        this.snakeCircles.unshift({x:this.snakeCircles[0].x, y:this.snakeCircles[0].y, direction:this.direction});
+                        this.snakeCircles[1].direction = this.direction;
+                    } else if (e.detail === 'U' && ['U', 'D'].indexOf(this.direction) === -1) {
+                        this.direction = 'U';
+                        this.snakeCircles.unshift({x:this.snakeCircles[0].x, y:this.snakeCircles[0].y, direction:this.direction});
+                        this.snakeCircles[1].direction = this.direction;
+                    } else if (e.detail === 'D' && ['U', 'D'].indexOf(this.direction) === -1) {
+                        this.direction = 'D';
+                        this.snakeCircles.unshift({x:this.snakeCircles[0].x, y:this.snakeCircles[0].y, direction:this.direction});
+                        this.snakeCircles[1].direction = this.direction;
+                    } else if (e.detail === 'Pause') {
+                        // Spiel pausieren
+                        var gameOver = new snake.GameOver(this.spielfeld, this.spielfeld.snakes, null, null, null);
+                        gameOver.showPause();
+                    }
+                }
+            }
+            this.lastTime = this.currentTime;
+		}
 	},
 
     // --------------------------------------------------------------
