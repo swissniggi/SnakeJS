@@ -98,7 +98,6 @@ kijs.Class.define('snake.Snake', {
                     this.snakeCircles[0].y <= 0 || this.snakeCircles[0].y+this.snakeCircleHeight >= this.spielfeld.height) {
                 this.gameOver();
 		this.playSounds();
-		break;
             }
 
             // Frucht
