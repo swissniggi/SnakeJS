@@ -17,7 +17,7 @@ kijs.Class.define('snake.Obstacle', {
         this.dom = spielfeld.spielfeld;
         this.context = this.dom.getContext('2d');
         this.setImage();
-        this.setCoordinates();
+        this.replace();
     },
 
     // --------------------------------------------------------------
@@ -48,7 +48,7 @@ kijs.Class.define('snake.Obstacle', {
             this.context.drawImage(this.image, this.x, this.y, this.width, this.height);
         },
         
-        setCoordinates: function() {
+        replace: function() {
             this.x = 0;
             // x-Koordinate: min 50 vom Rand und von der Mitte entfernt
             while (this.x < 50 || this.x > this.spielfeld.width - (this.width+50)) {
