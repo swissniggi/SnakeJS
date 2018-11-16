@@ -124,6 +124,7 @@ kijs.Class.define('snake.MagicSnake', {
                         if (this.snakeCircles[0].x<snake.snakeRectangles[i].x+snake.snakeRectangles[i].width && this.snakeCircles[0].x+snake.snakeCircleWidth>snake.snakeRectangles[i].x &&
                                 this.snakeCircles[0].y<snake.snakeRectangles[i].y+snake.snakeRectangles[i].height && this.snakeCircles[0].y+snake.snakeCircleHeight>snake.snakeRectangles[i].y) {
                             this.gameOver();
+			    this.playSounds();
                             break;
                         }
                     }
@@ -304,6 +305,13 @@ kijs.Class.define('snake.MagicSnake', {
                           break;
             }
             this.context.drawImage(img, this.snakeCircles[0].x+x, this.snakeCircles[0].y+y, this.snakeCircleWidth, this.snakeCircleHeight);
+        },
+	    
+	playSounds() {
+            var crash = new Audio('../sounds/crash.mp3');
+            var uaua = new Audio('../sounds/uaua.mp3');
+            crash.play();
+            uaua.play();
         },
         
         randomTurn: function() {
