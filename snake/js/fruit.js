@@ -36,6 +36,8 @@ kijs.Class.define('snake.Fruit', {
             if ((snake.snakeCircles[0].x<=this.x+this.width && snake.snakeCircles[0].x+snake.snakeCircleWidth>=this.x) &&
                     (snake.snakeCircles[0].y<=this.y+this.height && snake.snakeCircles[0].y+snake.snakeCircleHeight>=this.y)) {
                 this.replace();
+                var fruitmusic = new Audio('../sounds/fruit.mp3');
+                fruitmusic.play();
                 // Frucht neu platzieren wenn auf Hindernis
                 for (i = 0; i < 8; i++) {
                     while ((this.x<=snake.spielfeld.obstacles[i].x+snake.spielfeld.obstacles[i].width && this.x+this.width>=snake.spielfeld.obstacles[i].x) &&
