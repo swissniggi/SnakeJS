@@ -147,9 +147,17 @@ kijs.Class.define('snake.Spielfeld', {
             }, this);
 
             // Schlangen zeichnen
+            var length = -1;
             kijs.Array.each(this.snakes, function(snake) {
                 snake.paint();
+                if (!snake.isGameOver && snake.score > length) {
+                    length = snake.score;
+                    this.longestSnake = snake;
+                }
             }, this);
+            
+            // Krone zeichnen
+            this.longestSnake.paintCrown();
         },
         
         paint: function() {
