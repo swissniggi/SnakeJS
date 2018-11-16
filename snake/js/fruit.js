@@ -16,6 +16,7 @@ kijs.Class.define('snake.Fruit', {
         this.spielfeld = spielfeld;
         this.dom = spielfeld.spielfeld;
         this.context = this.dom.getContext('2d');
+        this.music = new Audio('../sounds/fruit.mp3');
         this.replace();
     },
 
@@ -26,6 +27,7 @@ kijs.Class.define('snake.Fruit', {
         context: null,
         dom: null,
         height: 56,
+        music: null,
         width: 52,
         x: null,
         y: null,
@@ -36,13 +38,13 @@ kijs.Class.define('snake.Fruit', {
             if ((snake.snakeCircles[0].x<=this.x+this.width && snake.snakeCircles[0].x+snake.snakeCircleWidth>=this.x) &&
                     (snake.snakeCircles[0].y<=this.y+this.height && snake.snakeCircles[0].y+snake.snakeCircleHeight>=this.y)) {
                 this.replace();
-                var fruitmusic = new Audio('../sounds/fruit.mp3');
-                fruitmusic.play();
+                this.music.play();
                 // Frucht neu platzieren wenn auf Hindernis
-                for (i = 0; i < 8; i++) {
-                    while ((this.x<=snake.spielfeld.obstacles[i].x+snake.spielfeld.obstacles[i].width && this.x+this.width>=snake.spielfeld.obstacles[i].x) &&
-                            (this.y<=snake.spielfeld.obstacles[i].y+snake.spielfeld.obstacles[i].height && this.y+this.height>=snake.spielfeld.obstacles[i].y)) {
+                for (i = 0; i < this.spielfeld.obstacles.length; i++) {
+                    if ((this.x<=this.spielfeld.obstacles[i].x+this.spielfeld.obstacles[i].width && this.x+this.width>=this.spielfeld.obstacles[i].x) &&
+                            (this.y<=this.spielfeld.obstacles[i].y+this.spielfeld.obstacles[i].height && this.y+this.height>=this.spielfeld.obstacles[i].y)) {
                         this.replace();
+                        i = 0;
                     }
                 }
                 return true;
