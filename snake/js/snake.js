@@ -122,6 +122,10 @@ kijs.Class.define('snake.Snake', {
                     if ((this.snakeCircles[0].x<=this.snakeRectangles[i].x+this.snakeRectangles[i].width && this.snakeCircles[0].x+this.snakeCircleWidth>=this.snakeRectangles[i].x) &&
                             (this.snakeCircles[0].y<=this.snakeRectangles[i].y+this.snakeRectangles[i].height && this.snakeCircles[0].y+this.snakeCircleHeight>=this.snakeRectangles[i].y)) {
                         this.gameOver();
+		        var crash = new Audio('../sounds/crash.mp3');
+                        var uaua = new Audio('../sounds/uaua.mp3');
+                        crash.play();
+                        uaua.play();
                         break;
                     }
                 }
@@ -134,6 +138,10 @@ kijs.Class.define('snake.Snake', {
                         if ((this.snakeCircles[0].x<snake.snakeRectangles[i].x+snake.snakeRectangles[i].width && this.snakeCircles[0].x+snake.snakeCircleWidth>snake.snakeRectangles[i].x) &&
                                 (this.snakeCircles[0].y<snake.snakeRectangles[i].y+snake.snakeRectangles[i].height && this.snakeCircles[0].y+snake.snakeCircleHeight>snake.snakeRectangles[i].y)) {
                             this.gameOver();
+			    var crash = new Audio('../sounds/crash.mp3');
+                            var uaua = new Audio('../sounds/uaua.mp3');
+                            crash.play();
+                            uaua.play();
                             break;
                         }
                     }
