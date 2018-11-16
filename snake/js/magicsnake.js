@@ -285,6 +285,26 @@ kijs.Class.define('snake.MagicSnake', {
             // Zufälligen Richtungswechsel kalkulieren
             this.randomTurn();
         },
+	    
+	paintCrown() {
+            var x = 0, y = 0;
+            var img = new Image();
+            switch(this.direction) {
+                case 'R': img.src = '../pictures/crownR.png';
+                          x = -11;
+                          break;
+                case 'L': img.src = '../pictures/crownL.png';
+                          x = 11;
+                          break;
+                case 'U': img.src = '../pictures/crownU.png';
+                          y = 11;
+                          break;
+                case 'D': img.src = '../pictures/crownD.png';
+                          y = -11;
+                          break;
+            }
+            this.context.drawImage(img, this.snakeCircles[0].x+x, this.snakeCircles[0].y+y, this.snakeCircleWidth, this.snakeCircleHeight);
+        },
         
         randomTurn: function() {
             var now = (new Date()).getTime();
