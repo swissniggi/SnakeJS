@@ -76,7 +76,14 @@ kijs.Class.define('snake.Spielfeld', {
                 document.body.appendChild(ru);
                 document.body.appendChild(el);
             }
-            this.balken[0].innerHTML = 'Schwierigkeit: mittel';
+            this.speed = window.localStorage.speed ? parseInt(window.localStorage.speed) : 6;
+            var difficulty = '';
+            switch (this.speed) {
+                case 3: difficulty = 'leicht'; break;
+                case 6: difficulty = 'mittel'; break;
+                case 9: difficulty = 'schwer'; break;
+            }
+            this.balken[0].innerHTML = 'Schwierigkeit: '+difficulty;
             this.eventhandler = kijs.createDelegate(this.setPlayers, this);
             window.addEventListener('keydown', this.eventhandler);
         },
@@ -234,6 +241,8 @@ kijs.Class.define('snake.Spielfeld', {
             kijs.Array.each(this.snakes, function(snake) {
                 snake.speed = this.speed;
             }, this);
+		
+	    window.localStorage.setItem('speed', this.speed);
             
             // Hindernisse erstellen
             for (i = 0; i < 8; i++) {
