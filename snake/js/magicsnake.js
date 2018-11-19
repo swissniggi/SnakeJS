@@ -26,7 +26,7 @@ kijs.Class.define('snake.MagicSnake', {
         this.snakeRectangles = [];
         this.directions = [this.direction];
         this.crashmusic = new Audio('../sounds/crash.mp3');
-        this.uauamsic = new Audio('../sounds/uaua.mp3');
+        this.uauamusic = new Audio('../sounds/uaua.mp3');
 
         this.snakeCircles.push({x:this.initX, y:this.initY, direction:this.direction});
         
