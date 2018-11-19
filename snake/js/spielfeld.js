@@ -103,22 +103,29 @@ kijs.Class.define('snake.Spielfeld', {
             this.snakemusic = null;
             this.msg = '';
             var maxScore = 0;
-            var s_names = ['Rote', 'Gelbe', 'Blaue', 'Gruene'];
-
+            var s_names = ['Rot', 'Gelb', 'Blau', 'Gruen'];
+            
+            this.snakes.sort(function(a, b) {
+                return b.score - a.score;
+            });
+            
+            var pos = 1;
             kijs.Array.each(this.snakes, function(snake) {
                 if (snake.basename === 'Snake') {
                     if (snake.score > maxScore) {
                         maxScore = snake.score;
                     }
-                    this.msg += '<p><span style=\"color: ' + snake.borderColor + '\">' + s_names[snake.no] 
-                             + '</span> Schlange: <span class="highscore_score">' + snake.score + ' Punkte</span></p>';
-                }
+                    if (snake.score !== 1) {
+                        var dot = 'Punkten';
+                    } else {
+                        var dot = 'Punkt';
+                    }
+                    this.msg += '<p>' + pos +'. Platz: <span style=\"color: ' + snake.borderColor + '\">' + s_names[snake.no] 
+                             + '</span> mit<span class="highscore_score"> ' + snake.score + ' ' + dot +'</span></p>';
+                    pos++;
+                }              
             }, this);
-
-            if ((this.snakes.length > 1 && !this.magicMode) || (this.snakes.length > 2 && this.magicMode)) {
-                this.msg += '<p>Die <span style="color: ' + lastSnake.borderColor + '">' + s_names[lastSnake.no] + '</span> Schlange hat am laengsten ueberlebt!</p>';
-                //-> das Font 'Silkscreen' hat keine Umlaute, d.h. ä = ae, ü = ue
-            }
+		
             this.maxScore = maxScore;
 
             // Highscore auslesen
