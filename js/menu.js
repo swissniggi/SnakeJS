@@ -25,7 +25,7 @@ kijs.Class.define('spieltisch.Menu', {
     // --------------------------------------------------------------
     // MEMBERS
     // --------------------------------------------------------------
-    members: {        
+    members: {
         buttons: null,
         music: null,
         viewPort: null,
@@ -45,7 +45,7 @@ kijs.Class.define('spieltisch.Menu', {
                         xtype: 'kijs.gui.BoxElement',
                         html: 'Spieltisch',
                         cls: 'title'
-                    }                                                                  
+                    }
                 ]
             });
             

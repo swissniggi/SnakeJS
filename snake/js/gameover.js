@@ -41,6 +41,7 @@ kijs.Class.define('snake.GameOver', {
         playGameOverSound: function(isNewScore) {
             if (!isNewScore) {
                 var oops = new Audio('../sounds/gameover.mp3');
+                oops.volume = 0.9;
                 oops.play();
             } else {
                 var applaus = new Audio('../sounds/applaus.mp3');

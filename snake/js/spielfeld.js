@@ -32,6 +32,7 @@ kijs.Class.define('snake.Spielfeld', {
         height: 0,
         highscore: null,
         isRunning: false,
+        longestSnake: null,
         magicSnakeOne: false,
         magicSnakeTwo: false,
         magicSnakeThree: false,
@@ -68,7 +69,9 @@ kijs.Class.define('snake.Spielfeld', {
                 var el = document.createElement('section');
                 var ru = document.createElement('div');
                 ru.innerHTML = 'Bewege den Joystick nach oben um mitzuspielen<br /><br />Druecke den schwarzen Button fuer einen CPU-Spieler';
-                ru.innerHTML += '<br /><br />Druecke den roten Button um das Spiel zu starten';
+                if (i === 0) {
+                    ru.innerHTML += '<br /><br />Druecke den roten Button um das Spiel zu starten';
+                }
                 el.classList.add('balken','punkte'+(i+1));
                 ru.classList.add('balken','rules'+(i+1));
                 this.balken.push(el);
@@ -85,7 +88,7 @@ kijs.Class.define('snake.Spielfeld', {
             }
             this.balken[0].innerHTML = 'Schwierigkeit: '+difficulty;
             this.eventhandler = kijs.createDelegate(this.setPlayers, this);
-            window.addEventListener('keydown', this.eventhandler);
+            window.addEventListener('keydown', this.eventhandler);           
         },
         
         defineAnimationFrame: function(_this) {
@@ -98,7 +101,7 @@ kijs.Class.define('snake.Spielfeld', {
             this._loopHandle = window.requestAnimationFrame(loopWrapper);
         },
         
-        gameOver: function(lastSnake) {
+        gameOver: function() {
             this.snakemusic.pause();
             this.snakemusic = null;
             this.msg = '';
@@ -125,7 +128,7 @@ kijs.Class.define('snake.Spielfeld', {
                     pos++;
                 }              
             }, this);
-		
+
             this.maxScore = maxScore;
 
             // Highscore auslesen
@@ -206,10 +209,10 @@ kijs.Class.define('snake.Spielfeld', {
             }
 
             var _this = this;
-
+            
             window.addEventListener('keydown', function(e) {
                 _this.raiseEvent('keydown', e);
-            }, false);
+            }, true);
 
             // Snakes erstellen
              if (this.snakeOne) {
@@ -228,28 +231,29 @@ kijs.Class.define('snake.Spielfeld', {
                 this.spielfeldwrapper.style.marginRight = "25px";
                 this.snakes.push(new snake.Snake(this, 3, this.width-35, this.height/2-17, 'L', '#01DF3A', {U:'l', D:'j', R:'k', L:'i', Enter:'z'}));                                
             }
-                        
+                   
+            // CPU-Snakes erstellen
             if (this.magicSnakeOne) {
                 this.snakes.push(new snake.MagicSnake(this, this.width/4-17, this.height/4*3-17, 'R', '#C0C0C0'));
             }
             
-            if (this.magicSnakeOne) {
+            if (this.magicSnakeTwo) {
                 this.snakes.push(new snake.MagicSnake(this, this.width/4-17, this.height/4-17, 'D', '#8A2BE2'));
             }
             
-            if (this.magicSnakeOne) {
+            if (this.magicSnakeThree) {
                 this.snakes.push(new snake.MagicSnake(this, this.width/4*3-17, this.height/4-17, 'R', '#00FFFF'));
             }
             
-            if (this.magicSnakeOne) {
+            if (this.magicSnakeFour) {
                 this.snakes.push(new snake.MagicSnake(this, this.width/4*3-17, this.height/4*3-17, 'U', '#FF1493'));
             }
             
             kijs.Array.each(this.snakes, function(snake) {
                 snake.speed = this.speed;
             }, this);
-		
-	     window.localStorage.setItem('speed', this.speed);
+            
+            window.localStorage.setItem('speed', this.speed);
             
             // Hindernisse erstellen
             for (i = 0; i < 8; i++) {
@@ -257,7 +261,7 @@ kijs.Class.define('snake.Spielfeld', {
                 this.obstacles.push(obstacle);
                 // Koordinaten des Hindernisses neu berechnen wenn auf anderem Hindernis
                 for (j = 0; j < this.obstacles.length; j++) {
-                    if (obstacle !== this.obstacle[j] && (obstacle.x<=this.obstacles[j].x+this.obstacles[j].width && obstacle.x+obstacle.width>=this.obstacles[j].x) &&
+                    if (obstacle !== this.obstacles[j] && (obstacle.x<=this.obstacles[j].x+this.obstacles[j].width && obstacle.x+obstacle.width>=this.obstacles[j].x) &&
                             (obstacle.y<=this.obstacles[j].y+this.obstacles[j].height && obstacle.y+obstacle.height>=this.obstacles[j].y)) {
                         obstacle.replace();
                         j = 0;

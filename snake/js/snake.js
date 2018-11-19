@@ -346,8 +346,8 @@ kijs.Class.define('snake.Snake', {
                     gameOver.showPause();
                 }
             }
-	}
-    },
+		}
+	},
 
     // --------------------------------------------------------------
     // DESTRUCTOR

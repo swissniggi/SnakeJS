@@ -46,7 +46,7 @@ kijs.Class.define('snake.Highscore', {
             this.backframe.classList.add('backframe');
             this.spielfeld.spielfeldwrapper.appendChild(this.backframe);
 
-            for (i=0; i<5; i++) {
+            for (i = 0; i < 5; i++) {
                 var frameX = {};
                 frameX.frontframe = document.createElement('div');
                 frameX.frontframe.classList.add('frontframe');
@@ -120,7 +120,7 @@ kijs.Class.define('snake.Highscore', {
             } else if (!isUp && this.selectedCharIndex > 0) {
                 this.selectedCharIndex--;
             } else {
-                this.selectedCharIndex = 36;                
+                this.selectedCharIndex = 36;
             }
             this.frames[this.selectedFrameIndex].charframe.innerHTML = this.chars[this.selectedCharIndex];
         },
@@ -166,7 +166,7 @@ kijs.Class.define('snake.Highscore', {
                                 this.frames[this.selectedFrameIndex].charframe.innerHTML = this.chars[this.selectedCharIndex];
                             } else {
                                 this.selectedCharIndex = this.chars.indexOf(this.frames[this.selectedFrameIndex].charframe.innerHTML);
-                            }						
+                            }
 						}
 						break;
 					case this.keys.U:
@@ -196,7 +196,7 @@ kijs.Class.define('snake.Highscore', {
                 fn:kijs.createDelegate(this.getResponse, this)
             };
             kijs.Ajax.request(config);
-        }     
+        }
     },
 
     // --------------------------------------------------------------
