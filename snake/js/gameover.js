@@ -112,10 +112,10 @@ kijs.Class.define('snake.GameOver', {
                 var button = document.createElement('button');
                 button.classList.add('buttonNewGameHorizontal');
                 if (!!window.chrome && !!window.chrome.webstore) {
-                    button.innerHTML = '<p>Neues Spiel starten</p>';
                     /* writing-mode kann im Chrome/Chromium nicht auf Buttons angewendet werden.
                        Mit einem <p> kann das Problem umgangen werden.
                      */
+                    button.innerHTML = '<p>Neues Spiel starten</p>';
                 } else {
                     button.innerHTML = 'Neues Spiel starten';
                 }
@@ -159,7 +159,7 @@ kijs.Class.define('snake.GameOver', {
             buttonNo.addEventListener('click', kijs.createDelegate(this.resumeGame, this));
             this.spielfeld.rules[this.snakes[0].no].appendChild(buttonYes);
             this.spielfeld.rules[this.snakes[0].no].appendChild(buttonNo);
-            buttonYes.focus();
+            setTimeout(function(){buttonYes.focus()}, 50);
         }
     },
 
