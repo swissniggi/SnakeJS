@@ -160,7 +160,7 @@ kijs.Class.define('snake.Snake', {
             }, this);
 
             if (allGameOver) {
-                this.spielfeld.gameOver(this);
+                this.spielfeld.gameOver();
             }
         },
 
@@ -322,31 +322,31 @@ kijs.Class.define('snake.Snake', {
         // EVENTS
         //--------
         _onStickEvent: function(e) {
-			if (this.spielfeld.isRunning) {
-				// gedrückte Taste ermitteln
-				if (e.detail === 'L' && ['R', 'L'].indexOf(this.direction) === -1) {
-					this.direction = 'L';
-					this.snakeCircles.unshift({x:this.snakeCircles[0].x, y:this.snakeCircles[0].y, direction:this.direction});
-					this.snakeCircles[1].direction = this.direction;
-				} else if (e.detail === 'R' && ['R', 'L'].indexOf(this.direction) === -1) {
-					this.direction = 'R';
-					this.snakeCircles.unshift({x:this.snakeCircles[0].x, y:this.snakeCircles[0].y, direction:this.direction});
-					this.snakeCircles[1].direction = this.direction;
-				} else if (e.detail === 'U' && ['U', 'D'].indexOf(this.direction) === -1) {
-					this.direction = 'U';
-					this.snakeCircles.unshift({x:this.snakeCircles[0].x, y:this.snakeCircles[0].y, direction:this.direction});
-					this.snakeCircles[1].direction = this.direction;
-				} else if (e.detail === 'D' && ['U', 'D'].indexOf(this.direction) === -1) {
-					this.direction = 'D';
-					this.snakeCircles.unshift({x:this.snakeCircles[0].x, y:this.snakeCircles[0].y, direction:this.direction});
-					this.snakeCircles[1].direction = this.direction;
-				} else if (e.detail === 'Pause') {
-					// Spiel pausieren
-					var gameOver = new snake.GameOver(this.spielfeld, this.spielfeld.snakes, null, null, null);
-					gameOver.showPause();
-				}
-			}
-	    }
+            if (this.spielfeld.isRunning) {
+                // gedrückte Taste ermitteln
+                if (e.detail === 'L' && ['R', 'L'].indexOf(this.direction) === -1) {
+                    this.direction = 'L';
+                    this.snakeCircles.unshift({x:this.snakeCircles[0].x, y:this.snakeCircles[0].y, direction:this.direction});
+                    this.snakeCircles[1].direction = this.direction;
+                } else if (e.detail === 'R' && ['R', 'L'].indexOf(this.direction) === -1) {
+                    this.direction = 'R';
+                    this.snakeCircles.unshift({x:this.snakeCircles[0].x, y:this.snakeCircles[0].y, direction:this.direction});
+                    this.snakeCircles[1].direction = this.direction;
+                } else if (e.detail === 'U' && ['U', 'D'].indexOf(this.direction) === -1) {
+                    this.direction = 'U';
+                    this.snakeCircles.unshift({x:this.snakeCircles[0].x, y:this.snakeCircles[0].y, direction:this.direction});
+                    this.snakeCircles[1].direction = this.direction;
+                } else if (e.detail === 'D' && ['U', 'D'].indexOf(this.direction) === -1) {
+                    this.direction = 'D';
+                    this.snakeCircles.unshift({x:this.snakeCircles[0].x, y:this.snakeCircles[0].y, direction:this.direction});
+                    this.snakeCircles[1].direction = this.direction;
+                } else if (e.detail === 'Pause') {
+                    // Spiel pausieren
+                    var gameOver = new snake.GameOver(this.spielfeld, this.spielfeld.snakes, null, null, null);
+                    gameOver.showPause();
+                }
+            }
+		}
 	},
 
     // --------------------------------------------------------------
