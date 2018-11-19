@@ -159,7 +159,7 @@ kijs.Class.define('snake.GameOver', {
             buttonNo.addEventListener('click', kijs.createDelegate(this.resumeGame, this));
             this.spielfeld.rules[this.snakes[0].no].appendChild(buttonYes);
             this.spielfeld.rules[this.snakes[0].no].appendChild(buttonNo);
-            setTimeout(function(){buttonYes.focus()}, 50);
+            setTimeout(function(){buttonYes.focus();}, 50);
         }
     },
 
