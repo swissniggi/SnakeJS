@@ -97,6 +97,10 @@ body{
     color: deeppink;
 }
 
+.highscore_text{
+    color: lawngreen;
+}
+
 .punkte1{
     bottom: -100px;
     left: 0px;

@@ -55,16 +55,16 @@ kijs.Class.define('snake.GameOver', {
         prepareMsg: function() {
             // Game-Over-Nachricht definieren
             if (this.highScore[9] === 'W') {
-                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
+                this.msg = '<p class="highscore_gameover">Game Over!</p>' + this.msg
                          + '<p class="highscore_new"><u>Neuer Wochen-Highscore!</u></p>'
-                         + '<p> Gib deinen Namen ein und bestaetige mit dem schwarzen Knopf</p>';
+                         + '<p class="highscore_text"> Gib deinen Namen ein und bestaetige mit dem schwarzen Knopf</p>';
                 this.showGameOver(true);
             } else if (this.highScore[9] === 'M') {
-                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
+                this.msg = '<p class="highscore_gameover">Game Over!</p>' + this.msg
                          + '<p class="highscore_new"><u>Neuer Monats-Highscore!</u></p>';
                 this.showGameOver(true);
             } else if (this.highScore[9] === 'Y') {
-                this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
+                this.msg = '<p class="highscore_gameover">Game Over!</p>' + this.msg
                          + '<p class="highscore_new"><u>Neuer Jahres-Highscore!</u></p>';
                 this.showGameOver(true);
             } else {
