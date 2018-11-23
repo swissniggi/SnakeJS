@@ -43,7 +43,6 @@ kijs.Class.define('snake.Spielfeld', {
         rules: null,
         snakemusic: null,
         snakes: null,
-        snakeOne: false,
         snakeTwo: false,
         snakeThree: false,
         snakeFour: false,
@@ -87,6 +86,8 @@ kijs.Class.define('snake.Spielfeld', {
                 case 9: difficulty = 'schwer'; break;
             }
             this.balken[0].innerHTML = 'Schwierigkeit: '+difficulty;
+            this.balken[0].classList.add('slidefrombottom');
+            this.balken[3].classList.add('redSnakeVisible');
             this.eventhandler = kijs.createDelegate(this.setPlayers, this);
             window.addEventListener('keydown', this.eventhandler);           
         },
@@ -126,7 +127,7 @@ kijs.Class.define('snake.Spielfeld', {
                     this.msg += '<p>' + pos +'. Platz: <span style=\"color: ' + snake.borderColor + '\">' + s_names[snake.no] 
                              + '</span> mit<span class="highscore_score"> ' + snake.score + ' ' + dot +'</span></p>';
                     pos++;
-                }              
+                }
             }, this);
 
             this.maxScore = maxScore;
@@ -195,9 +196,8 @@ kijs.Class.define('snake.Spielfeld', {
             this.height = this.spielfeldwrapper.offsetHeight;      
             
             // Spielfeldgrösse anpassen
-            if (this.snakeOne) {
-                this.height -= 25;
-            }
+            this.height -= 25;
+
             if (this.snakeTwo) {
                 this.width -= 25;
             }
@@ -215,10 +215,9 @@ kijs.Class.define('snake.Spielfeld', {
             }, true);
 
             // Snakes erstellen
-             if (this.snakeOne) {
-                this.spielfeldwrapper.style.marginBottom = "25px";
-                this.snakes.push(new snake.Snake(this, 0, this.width/2-17, this.height-35, 'U', '#FF0000', {R:'ArrowRight', L:'ArrowLeft', D:'ArrowDown', U:'ArrowUp', Enter:'q'}));                               
-            }
+            this.spielfeldwrapper.style.marginBottom = "25px";
+            this.snakes.push(new snake.Snake(this, 0, this.width/2-17, this.height-35, 'U', '#FF0000', {R:'ArrowRight', L:'ArrowLeft', D:'ArrowDown', U:'ArrowUp', Enter:'q'}));
+            
             if (this.snakeTwo) {
                 this.spielfeldwrapper.style.marginLeft = "25px";
                 this.snakes.push(new snake.Snake(this, 1, 35, this.height/2-17, 'R', '#FFE000', {D:'d', U:'a', L:'s', R:'w', Enter:'x'}));                                
@@ -311,12 +310,6 @@ kijs.Class.define('snake.Spielfeld', {
                         }
                         this.balken[0].innerHTML = 'Schwierigkeit: ' + difficulty;
                         break;
-                    case 38:
-                        // roter Balken aktivieren
-                        this.balken[0].classList.add('slidefrombottom');
-                        this.balken[3].classList.add('redSnakeVisible');
-                        this.snakeOne = true;
-                        break;
                     case 39:
                         // Schwierigkeit hoch
                         if (this.speed < 9) {
@@ -327,12 +320,6 @@ kijs.Class.define('snake.Spielfeld', {
                             case 9: difficulty = 'schwer'; break;
                         }
                         this.balken[0].innerHTML = 'Schwierigkeit: ' + difficulty;
-                        break;
-                    case 40:
-                        // roter Balken deaktivieren
-                        this.balken[0].classList.remove('slidefrombottom');
-                        this.balken[3].classList.remove('redSnakeVisible');
-                        this.snakeOne = false;
                         break;
                     case 83:
                         // gelber Balken aktivieren
@@ -377,13 +364,11 @@ kijs.Class.define('snake.Spielfeld', {
                         this.magicSnakeFour = true;
                         break;
 					case 13:
-                        if (this.snakeOne) {
-                            for (i = 0; i < this.rules.length; i++) {
-                                document.body.removeChild(this.rules[i]);
-                            }
-                            window.removeEventListener('keydown', this.eventhandler);
-                            this.prepare();
+                        for (i = 0; i < this.rules.length; i++) {
+                            document.body.removeChild(this.rules[i]);
                         }
+                        window.removeEventListener('keydown', this.eventhandler);
+                        this.prepare();
 						break;
 				}                
 			}

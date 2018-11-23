@@ -56,7 +56,8 @@ kijs.Class.define('snake.GameOver', {
             // Game-Over-Nachricht definieren
             if (this.highScore[9] === 'W') {
                 this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
-                         + '<p class="highscore_new"><u>Neuer Wochen-Highscore!</u></p>';
+                         + '<p class="highscore_new"><u>Neuer Wochen-Highscore!</u></p>'
+                         + '<p> Gib deinen Namen ein und bestaetige mit dem schwarzen Knopf</p>';
                 this.showGameOver(true);
             } else if (this.highScore[9] === 'M') {
                 this.msg = '<p style="font-size:150%">Game Over!</p>' + this.msg
@@ -112,7 +113,7 @@ kijs.Class.define('snake.GameOver', {
             if (!isNewScore) {
                 var button = document.createElement('button');
                 button.classList.add('buttonNewGameHorizontal');
-                if (!!window.chrome && !!window.chrome.webstore) {
+                if (!!window.chrome && !!window.chrome.webstore) {                    
                     /* writing-mode kann im Chrome/Chromium nicht auf Buttons angewendet werden.
                        Mit einem <p> kann das Problem umgangen werden.
                      */
@@ -133,8 +134,8 @@ kijs.Class.define('snake.GameOver', {
             this.eventhandler = kijs.createDelegate(this.setFocus, this);
             window.addEventListener('keydown', this.eventhandler);
             var msgPause = '<p style="color:lawngreen"><u>Pause!</u></p><p>Weiterspielen?</p>';
-            this.spielfeld.rules[this.snakes[0].no].innerHTML = msgPause;
-            document.body.appendChild(this.spielfeld.rules[this.snakes[0].no]);
+            this.spielfeld.rules[0].innerHTML = msgPause;
+            document.body.appendChild(this.spielfeld.rules[0]);
             // Buttons 'Klar!' und 'Keine Lust' einfügen
             var buttonYes = document.createElement('button');
             var buttonNo = document.createElement('button');
@@ -158,8 +159,8 @@ kijs.Class.define('snake.GameOver', {
             }
             buttonYes.addEventListener('click', kijs.createDelegate(this.resumeGame, this));
             buttonNo.addEventListener('click', kijs.createDelegate(this.resumeGame, this));
-            this.spielfeld.rules[this.snakes[0].no].appendChild(buttonYes);
-            this.spielfeld.rules[this.snakes[0].no].appendChild(buttonNo);
+            this.spielfeld.rules[0].appendChild(buttonYes);
+            this.spielfeld.rules[0].appendChild(buttonNo);
             setTimeout(function(){buttonYes.focus();}, 10);
         }
     },
