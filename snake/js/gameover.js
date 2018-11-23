@@ -61,11 +61,13 @@ kijs.Class.define('snake.GameOver', {
                 this.showGameOver(true);
             } else if (this.highScore[9] === 'M') {
                 this.msg = '<p class="highscore_gameover">Game Over!</p>' + this.msg
-                         + '<p class="highscore_new"><u>Neuer Monats-Highscore!</u></p>';
+                         + '<p class="highscore_new"><u>Neuer Monats-Highscore!</u></p>'
+                         + '<p class="highscore_text"> Gib deinen Namen ein und bestaetige mit dem schwarzen Knopf</p>';
                 this.showGameOver(true);
             } else if (this.highScore[9] === 'Y') {
                 this.msg = '<p class="highscore_gameover">Game Over!</p>' + this.msg
-                         + '<p class="highscore_new"><u>Neuer Jahres-Highscore!</u></p>';
+                         + '<p class="highscore_new"><u>Neuer Jahres-Highscore!</u></p>'
+                         + '<p class="highscore_text"> Gib deinen Namen ein und bestaetige mit dem schwarzen Knopf</p>';
                 this.showGameOver(true);
             } else {
                 this.msg = '<p class="highscore_gameover">Game Over!</p>' + this.msg
