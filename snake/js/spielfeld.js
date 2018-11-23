@@ -46,7 +46,7 @@ kijs.Class.define('snake.Spielfeld', {
         snakeTwo: false,
         snakeThree: false,
         snakeFour: false,
-        speed: 6,
+        speed: null,
         spielfeld: null,
         spielfeldwrapper: null,
         width: 0,
