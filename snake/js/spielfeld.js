@@ -67,9 +67,11 @@ kijs.Class.define('snake.Spielfeld', {
             for (i = 0; i < 4; i++) {
                 var el = document.createElement('section');
                 var ru = document.createElement('div');
-                ru.innerHTML = 'Bewege den Joystick nach oben um mitzuspielen<br /><br />Druecke den schwarzen Button fuer einen CPU-Spieler';
+
                 if (i === 0) {
-                    ru.innerHTML += '<br /><br />Druecke den roten Button um das Spiel zu starten';
+                    ru.innerHTML = 'Druecke den schwarzen Button fuer einen CPU-Spieler<br /><br />Druecke den roten Button um das Spiel zu starten';
+                } else {
+                    ru.innerHTML = 'Bewege den Joystick nach oben um mitzuspielen oder nach unten um auszusteigen<br /><br />Druecke den schwarzen Button fuer einen CPU-Spieler';
                 }
                 el.classList.add('balken','punkte'+(i+1));
                 ru.classList.add('balken','rules'+(i+1));
@@ -353,15 +355,23 @@ kijs.Class.define('snake.Spielfeld', {
                         break;
                     case 81:
                         this.magicSnakeOne = true;
+                        var magicmusic = new Audio('../sounds/tada.mp3');
+                        magicmusic.play();
                         break;
                     case 88:
                         this.magicSnakeTwo = true;
+                        var magicmusic = new Audio('../sounds/tada.mp3');
+                        magicmusic.play();
                         break;
                     case 89:
                         this.magicSnakeThree = true;
+                        var magicmusic = new Audio('../sounds/tada.mp3');
+                        magicmusic.play();
                         break;
                     case 90:
                         this.magicSnakeFour = true;
+                        var magicmusic = new Audio('../sounds/tada.mp3');
+                        magicmusic.play();
                         break;
 					case 13:
                         for (i = 0; i < this.rules.length; i++) {
