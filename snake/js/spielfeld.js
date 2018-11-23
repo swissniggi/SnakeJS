@@ -69,9 +69,12 @@ kijs.Class.define('snake.Spielfeld', {
                 var ru = document.createElement('div');
 
                 if (i === 0) {
-                    ru.innerHTML = 'Druecke den schwarzen Button fuer einen CPU-Spieler<br /><br />Druecke den roten Button um das Spiel zu starten';
+                    ru.innerHTML = 'Druecke den schwarzen Button fuer einen CPU-Spieler<br /><br />'
+                            +'Druecke den Stick nach links oder rechts um die Schwierigkeit zu aendern<br /><br />'
+                            +'Druecke den roten Button um das Spiel zu starten';
                 } else {
-                    ru.innerHTML = 'Bewege den Joystick nach oben um mitzuspielen oder nach unten um auszusteigen<br /><br />Druecke den schwarzen Button fuer einen CPU-Spieler';
+                    ru.innerHTML = 'Bewege den Joystick nach oben um mitzuspielen oder nach unten um auszusteigen<br /><br />'
+                            +'Druecke den schwarzen Button fuer einen CPU-Spieler';
                 }
                 el.classList.add('balken','punkte'+(i+1));
                 ru.classList.add('balken','rules'+(i+1));
